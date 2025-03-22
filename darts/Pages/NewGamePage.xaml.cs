@@ -12,4 +12,7 @@ public partial class NewGamePage : ContentPage
     {
         InitializeComponent();
     }
+    
+    private async void StartGame(object? sender, EventArgs e)
+        => await Shell.Current.GoToAsync(nameof(GamePage));
 }
