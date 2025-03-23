@@ -63,10 +63,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ViewModel\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <MauiXaml Update="Pages\GamePage.xaml">
         <SubType>Designer</SubType>
       </MauiXaml>

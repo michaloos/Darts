@@ -2,7 +2,11 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:darts.ViewModel"
              x:Class="darts.NewGamePage">
+    <ContentPage.BindingContext>
+        <viewModel:NewGameViewModel/>
+    </ContentPage.BindingContext>
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
@@ -10,7 +14,7 @@
             
             <Button
                 Text="Rozpocznij grę"
-                Clicked="StartGame"/>
+                Command="{Binding StartNewGameCommand}"/>
             
         </VerticalStackLayout>
     </ScrollView>
