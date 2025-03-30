@@ -26,7 +26,8 @@
             
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.85*"/>
+                <RowDefinition Height="0.15*"/>
+                <RowDefinition Height="0.70*"/>
             </Grid.RowDefinitions>
             
             <Grid.ColumnDefinitions>
@@ -35,24 +36,19 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding NewUserName, Mode=TwoWay}"></Entry>
-            <Button Text="Dodaj" Grid.Row="0" Grid.Column="2" Command="{Binding AddNewUserCommand}"></Button>
             
-            <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" 
+            <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Placeholder="Nazwa gracza" ClearButtonVisibility="WhileEditing"
+                   Text="{Binding NewUserName, Mode=TwoWay}" />
+            <Button Text="Dodaj" Grid.Row="0" Grid.Column="2" Command="{Binding AddNewUserCommand}" VerticalOptions="Center"/>
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="Gracze" FontSize="24"/>
+            
+            <CollectionView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" 
                       ItemsSource="{Binding Users}"
-                      Header="{Binding .}"
                       SelectionMode="None">
-                <ListView.HeaderTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Label Text="Lista graczy" FontAutoScalingEnabled="True" FontSize="24"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.HeaderTemplate>
-                <ListView.ItemTemplate>
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:User">
-                        <ViewCell>
-                            <Grid>
+                        <Frame Margin="8" Padding="4" CornerRadius="8" BorderColor="SlateGray" HasShadow="True">
+                            <Grid Padding="4">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
@@ -62,40 +58,40 @@
                                     <ColumnDefinition Width="0.10*"/>
                                 </Grid.ColumnDefinitions>
                                 
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
-                                <Button Grid.Row="0" Grid.Column="1" BackgroundColor="Red"
+                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Fill" VerticalTextAlignment="Center"/>
+                                <Button Grid.Row="0" Grid.Column="1" BackgroundColor="Red" HorizontalOptions="Center" Padding="8"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:NewGameViewModel}}, Path=RemoveUserCommand}" 
                                         CommandParameter="{Binding Id}" ImageSource="./Resources/Images/delete.svg"/>
                             </Grid>
-                        </ViewCell>
+                        </Frame>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
         
         <!-- wybór trybu gry -->
         <Grid Grid.Row="1" Grid.Column="0" VerticalOptions="FillAndExpand" Padding="8">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.15*"/>
+                <RowDefinition Height="0.85*"/>
             </Grid.RowDefinitions>
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Games}" Header="{Binding .}" 
-                      SelectionMode="Single">
-                <ListView.HeaderTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Label Text="Rodzaje gier" FontAutoScalingEnabled="True" FontSize="24"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.HeaderTemplate>
-                <ListView.ItemTemplate>
+            <Label Grid.Row="0" Grid.Column="0"  Text="Gry" FontSize="24"/>
+            <CollectionView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Games}"
+                      SelectionMode="None">
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:GameMode">
-                        <ViewCell>
-                            <Grid>
+                        <Frame Margin="8" Padding="8" CornerRadius="8" BorderColor="SlateGray" HasShadow="True">
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="DarkGrey"/>
+                                </DataTrigger>
+                            </Frame.Triggers>
+                            <Grid Padding="8">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
@@ -104,12 +100,19 @@
                                     <ColumnDefinition Width="0.90*"/>
                                     <ColumnDefinition Width="0.10*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}"></Label>
+                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold"
+                                       VerticalOptions="Fill" VerticalTextAlignment="Center"/>
                             </Grid>
-                        </ViewCell>
+                            
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding 
+                                    Source={RelativeSource AncestorType={x:Type viewModel:NewGameViewModel}}, Path=SelectGameModeCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
         
         <Button Grid.Row="2" Grid.Column="0" Padding="8" HorizontalOptions="Center"

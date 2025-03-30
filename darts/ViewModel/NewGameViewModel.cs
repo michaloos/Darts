@@ -11,14 +11,21 @@ public class NewGameViewModel : BaseViewModel
     public ICommand StartNewGameCommand { get; set; }
     public ICommand AddNewUserCommand { get; set; }
     public ICommand RemoveUserCommand { get; set; }
-    public bool CanStartNewGame { get; set; }
-    public List<GameMode> Games { get; set; }
+    public ICommand SelectGameModeCommand { get; set; }
 
-    private string _newUserName;
+    public bool CanStartNewGame
+    {
+        get => _canStartNewGame;
+        set => SetProperty(ref _canStartNewGame, value);
+    }
+    public ObservableCollection<GameMode> Games { get; set; }
+
+    private string? _newUserName;
+    private bool _canStartNewGame;
 
     public string NewUserName
     {
-        get =>  _newUserName;
+        get =>  _newUserName ?? "";
         set => SetProperty(ref _newUserName, value);
     }
     public ObservableCollection<User> Users { get; set; }
@@ -29,6 +36,24 @@ public class NewGameViewModel : BaseViewModel
         StartNewGameCommand = new Command(StartNewGame);
         AddNewUserCommand = new Command(AddNewUser);
         RemoveUserCommand = new Command<Guid>(RemoveUser);
+        SelectGameModeCommand = new Command<GameMode>(OnGameModeSelected);
+    }
+
+    private void OnGameModeSelected(GameMode? selectedGameMode)
+    {
+        if (selectedGameMode is null)
+            return;
+
+        foreach (var gameMode in Games)
+            gameMode.IsSelected = false;
+
+        selectedGameMode.IsSelected = true;
+        
+        var index = Games.IndexOf(selectedGameMode);
+        if (index >= 0)
+            Games[index] = selectedGameMode;
+
+        SetCanStartNewGame();
     }
 
     private async void StartNewGame()
@@ -52,6 +77,15 @@ public class NewGameViewModel : BaseViewModel
         });
         CanStartNewGame = true;
         NewUserName = string.Empty;
+        SetCanStartNewGame();
+    }
+
+    private void SetCanStartNewGame()
+    {
+        if (Users.Count >= 2 && Games.Any(x => x.IsSelected))
+            _canStartNewGame = true;
+        else
+            _canStartNewGame = false;
     }
 
     private async void RemoveUser(Guid userId)
@@ -68,6 +102,7 @@ public class NewGameViewModel : BaseViewModel
             if(confirmation)
                 Users.Remove(userToRemove);
         }
+        SetCanStartNewGame();
     }
 
 }

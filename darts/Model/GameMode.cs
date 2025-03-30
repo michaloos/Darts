@@ -1,8 +1,11 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace darts.Model;
 
-public class GameMode
+public class GameMode : INotifyPropertyChanged
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
@@ -11,6 +14,17 @@ public class GameMode
     public required bool RequiresDoubleOut { get; set; }
     public required bool UsesSpecificTargets { get; set; }
     public required bool HasScoringSystem { get; set; }
+
+    public required bool IsSelected
+    {
+        get => _isSelected;
+        set {
+            if (_isSelected == value) return;
+            _isSelected = value;
+            OnPropertyChanged();
+        }
+}
+    private bool _isSelected;
 
 
     [SetsRequiredMembers]
@@ -24,11 +38,26 @@ public class GameMode
         UsesSpecificTargets = usesSpecificTargets;
         HasScoringSystem = hasScoringSystem;
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 }
 
 public static class GameModes
 {
-    public static readonly List<GameMode> Modes =
+    public static readonly ObservableCollection<GameMode> Modes =
     [
         new GameMode(Guid.Parse("9EED0709-B22F-4F78-8DAC-FE84675505A3"), "501 / 301",
             "Gracze zaczynają z 501 lub 301 punktami i muszą dojść do dokładnie 0. W wersji Double Out ostatni rzut musi trafić w podwójne pole.",
