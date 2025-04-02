@@ -3,11 +3,13 @@ using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using darts.Model;
+using darts.Services.Interfaces;
 
 namespace darts.ViewModel;
 
 public class NewGameViewModel : BaseViewModel
 {
+    private readonly IGameService _gameService;
     public ICommand StartNewGameCommand { get; set; }
     public ICommand AddNewUserCommand { get; set; }
     public ICommand RemoveUserCommand { get; set; }
@@ -29,8 +31,11 @@ public class NewGameViewModel : BaseViewModel
         set => SetProperty(ref _newUserName, value);
     }
     public ObservableCollection<User> Users { get; set; }
-    public NewGameViewModel()
+    
+    public NewGameViewModel(IGameService gameService)
     {
+        _gameService = gameService;
+
         Games = GameModes.Modes;
         Users = [];
         StartNewGameCommand = new Command(StartNewGame);
@@ -57,7 +62,17 @@ public class NewGameViewModel : BaseViewModel
     }
 
     private async void StartNewGame()
-        => await Shell.Current.GoToAsync(nameof(GamePage));
+    {
+        var selectedGameMode = Games.SingleOrDefault(x => x.IsSelected);
+        if (selectedGameMode is null) 
+        {
+            var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
+            await toast.Show();
+            return;
+        }
+        _gameService.StartNewGame(selectedGameMode, Users.ToList());
+        await Shell.Current.GoToAsync(nameof(GamePage));
+    }
 
     private async void AddNewUser()
     {
@@ -75,17 +90,13 @@ public class NewGameViewModel : BaseViewModel
             Id = Guid.NewGuid(),
             Name = NewUserName
         });
-        CanStartNewGame = true;
         NewUserName = string.Empty;
         SetCanStartNewGame();
     }
 
     private void SetCanStartNewGame()
     {
-        if (Users.Count >= 2 && Games.Any(x => x.IsSelected))
-            _canStartNewGame = true;
-        else
-            _canStartNewGame = false;
+        CanStartNewGame = Users.Count >= 2 && Games.Any(x => x.IsSelected);
     }
 
     private async void RemoveUser(Guid userId)

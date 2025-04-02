@@ -14,6 +14,7 @@ public class GameMode : INotifyPropertyChanged
     public required bool RequiresDoubleOut { get; set; }
     public required bool UsesSpecificTargets { get; set; }
     public required bool HasScoringSystem { get; set; }
+    public required bool Disabled { get; set; }
 
     public required bool IsSelected
     {
@@ -29,7 +30,7 @@ public class GameMode : INotifyPropertyChanged
 
     [SetsRequiredMembers]
     public GameMode(Guid id, string name, string description, 
-        int startingScore = 0, bool requiresDoubleOut = false, bool usesSpecificTargets = false, bool hasScoringSystem = false)
+        int startingScore = 0, bool requiresDoubleOut = false, bool usesSpecificTargets = false, bool hasScoringSystem = false, bool disabled = true)
     {
         Name = name;
         Description = description;
@@ -37,6 +38,7 @@ public class GameMode : INotifyPropertyChanged
         RequiresDoubleOut = requiresDoubleOut;
         UsesSpecificTargets = usesSpecificTargets;
         HasScoringSystem = hasScoringSystem;
+        Disabled = disabled;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -61,7 +63,7 @@ public static class GameModes
     [
         new GameMode(Guid.Parse("9EED0709-B22F-4F78-8DAC-FE84675505A3"), "501 / 301",
             "Gracze zaczynają z 501 lub 301 punktami i muszą dojść do dokładnie 0. W wersji Double Out ostatni rzut musi trafić w podwójne pole.",
-            501, true, false, true),
+            501, true, false, true, false),
         new GameMode(Guid.Parse("237587C5-3223-4B1C-AECC-FADA6FCF10DE"), "Cricket",
             "Gracze muszą zamknąć pola 15-20 i bullseye, trafiając je 3 razy. Po zamknięciu pola zdobywa się punkty, dopóki przeciwnik go nie zamknie.",
             0, false, true, true),

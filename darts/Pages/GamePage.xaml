@@ -3,11 +3,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
+             xmlns:models="clr-namespace:darts.Model"
              x:Class="darts.GamePage">
-    <ContentPage.BindingContext>
-        <viewModel:GameViewModel/>
-    </ContentPage.BindingContext>
-    
     <Grid VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.70*"/>
@@ -18,9 +15,60 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <ScrollView Grid.Row="0" Grid.Column="0" BackgroundColor="Aqua" Padding="8">
-            
-        </ScrollView>
+        <CollectionView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding UserGames}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:UserGame">
+                    <Frame HeightRequest="100" Margin="8" Padding="8" CornerRadius="8" BorderColor="SlateGray" HasShadow="True">
+                        <Frame.Triggers>
+                            <DataTrigger TargetType="Frame" Binding="{Binding CurrentPlayer}" Value="True">
+                                <Setter Property="BackgroundColor" Value="DarkGrey"/>
+                            </DataTrigger>
+                        </Frame.Triggers>
+                        <Grid VerticalOptions="FillAndExpand" RowSpacing="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.25*"/>
+                                <RowDefinition Height="0.75*"/>
+                            </Grid.RowDefinitions>
+        
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.25*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.25*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="{Binding User.Name}" FontAttributes="Bold"/>
+                            <Border Grid.Row="1" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white">
+                                <Label Text="{Binding Position}" FontAttributes="Bold"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white">
+                                <Label Text="{Binding CurrentScore}" FontAttributes="Bold"/>
+                            </Border>
+                            <Grid Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" ColumnSpacing="4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+        
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.20*"/>
+                                    <ColumnDefinition Width="0.20*"/>
+                                    <ColumnDefinition Width="0.20*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
+                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                </Border>
+                                <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
+                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                </Border>
+                                <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
+                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                </Border>
+                            </Grid>
+                            
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
         
         <Grid Grid.Row="1" Grid.Column="0" Padding="8" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -40,34 +88,44 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <Button Grid.Row="0" Grid.Column="0" Clicked="PointButtonClicked" CommandParameter="0" x:Name="Button0" BackgroundColor="LightGray" Text="0" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="1" Clicked="PointButtonClicked" CommandParameter="1" x:Name="Button1" BackgroundColor="LightGray" Text="1" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="2" Clicked="PointButtonClicked" CommandParameter="2" x:Name="Button2" BackgroundColor="LightGray" Text="2" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="3" Clicked="PointButtonClicked" CommandParameter="3" x:Name="Button3" BackgroundColor="LightGray" Text="3" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="4" Clicked="PointButtonClicked" CommandParameter="4" x:Name="Button4" BackgroundColor="LightGray" Text="4" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="5" Clicked="PointButtonClicked" CommandParameter="5" x:Name="Button5" BackgroundColor="LightGray" Text="5" Margin="4"/>
-            <Button Grid.Row="0" Grid.Column="6" Clicked="PointButtonClicked" CommandParameter="6" x:Name="Button6" BackgroundColor="LightGray" Text="6" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="0" Clicked="PointButtonClicked" CommandParameter="7" x:Name="Button7" BackgroundColor="LightGray" Text="7" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="1" Clicked="PointButtonClicked" CommandParameter="8" x:Name="Button8" BackgroundColor="LightGray" Text="8" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="2" Clicked="PointButtonClicked" CommandParameter="9" x:Name="Button9" BackgroundColor="LightGray" Text="9" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="3" Clicked="PointButtonClicked" CommandParameter="10" x:Name="Button10" BackgroundColor="LightGray" Text="10" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="4" Clicked="PointButtonClicked" CommandParameter="11" x:Name="Button11" BackgroundColor="LightGray" Text="11" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="5" Clicked="PointButtonClicked" CommandParameter="12" x:Name="Button12" BackgroundColor="LightGray" Text="12" Margin="4"/>
-            <Button Grid.Row="1" Grid.Column="6" Clicked="PointButtonClicked" CommandParameter="13" x:Name="Button13" BackgroundColor="LightGray" Text="13" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="0" Clicked="PointButtonClicked" CommandParameter="14" x:Name="Button14" BackgroundColor="LightGray" Text="14" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="1" Clicked="PointButtonClicked" CommandParameter="15" x:Name="Button15" BackgroundColor="LightGray" Text="15" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="2" Clicked="PointButtonClicked" CommandParameter="16" x:Name="Button16" BackgroundColor="LightGray" Text="16" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="3" Clicked="PointButtonClicked" CommandParameter="17" x:Name="Button17" BackgroundColor="LightGray" Text="17" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="4" Clicked="PointButtonClicked" CommandParameter="18" x:Name="Button18" BackgroundColor="LightGray" Text="18" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="5" Clicked="PointButtonClicked" CommandParameter="19" x:Name="Button19" BackgroundColor="LightGray" Text="19" Margin="4"/>
-            <Button Grid.Row="2" Grid.Column="6" Clicked="PointButtonClicked" CommandParameter="20" x:Name="Button20" BackgroundColor="LightGray" Text="20" Margin="4"/>
-            <Button Grid.Row="3" Grid.Column="0" Clicked="PointButtonClicked" CommandParameter="25" x:Name="Button25" BackgroundColor="LightGray" Text="25" Margin="4"/>
-            <Button Grid.Row="3" Grid.Column="1" Clicked="PointButtonClicked" CommandParameter="50" x:Name="Button50" BackgroundColor="LightGray" Text="50" Margin="4"/>
-            <Button Grid.Row="3" Grid.Column="2" BackgroundColor="LightGray" Grid.ColumnSpan="2" Text="x2" Margin="4"
-                    Clicked="OnToggleX2Clicked" x:Name="X2Button"/>
-            <Button Grid.Row="3" Grid.Column="4" BackgroundColor="LightGray" Grid.ColumnSpan="2" Text="x3" Margin="4"
-                    Clicked="OnToggleX3Clicked" x:Name="X3Button"/>
-            <Button Grid.Row="3" Grid.Column="6" x:Name="ButtonUndo" BackgroundColor="LightGray" ImageSource="./Resources/Images/undo.svg" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddScoreCommand}" CommandParameter="0" BackgroundColor="LightGray" Text="0" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding AddScoreCommand}" CommandParameter="1" BackgroundColor="LightGray" Text="1" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding AddScoreCommand}" CommandParameter="2" BackgroundColor="LightGray" Text="2" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="3" Command="{Binding AddScoreCommand}" CommandParameter="3" BackgroundColor="LightGray" Text="3" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="4" Command="{Binding AddScoreCommand}" CommandParameter="4" BackgroundColor="LightGray" Text="4" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="5" Command="{Binding AddScoreCommand}" CommandParameter="5" BackgroundColor="LightGray" Text="5" Margin="4"/>
+            <Button Grid.Row="0" Grid.Column="6" Command="{Binding AddScoreCommand}" CommandParameter="6" BackgroundColor="LightGray" Text="6" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="0" Command="{Binding AddScoreCommand}" CommandParameter="7" BackgroundColor="LightGray" Text="7" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="1" Command="{Binding AddScoreCommand}" CommandParameter="8" BackgroundColor="LightGray" Text="8" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="2" Command="{Binding AddScoreCommand}" CommandParameter="9" BackgroundColor="LightGray" Text="9" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="3" Command="{Binding AddScoreCommand}" CommandParameter="10" BackgroundColor="LightGray" Text="10" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="4" Command="{Binding AddScoreCommand}" CommandParameter="11" BackgroundColor="LightGray" Text="11" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="5" Command="{Binding AddScoreCommand}" CommandParameter="12" BackgroundColor="LightGray" Text="12" Margin="4"/>
+            <Button Grid.Row="1" Grid.Column="6" Command="{Binding AddScoreCommand}" CommandParameter="13" BackgroundColor="LightGray" Text="13" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="0" Command="{Binding AddScoreCommand}" CommandParameter="14" BackgroundColor="LightGray" Text="14" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="1" Command="{Binding AddScoreCommand}" CommandParameter="15" BackgroundColor="LightGray" Text="15" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="2" Command="{Binding AddScoreCommand}" CommandParameter="16" BackgroundColor="LightGray" Text="16" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="3" Command="{Binding AddScoreCommand}" CommandParameter="17" BackgroundColor="LightGray" Text="17" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="4" Command="{Binding AddScoreCommand}" CommandParameter="18" BackgroundColor="LightGray" Text="18" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="5" Command="{Binding AddScoreCommand}" CommandParameter="19" BackgroundColor="LightGray" Text="19" Margin="4"/>
+            <Button Grid.Row="2" Grid.Column="6" Command="{Binding AddScoreCommand}" CommandParameter="20" BackgroundColor="LightGray" Text="20" Margin="4"/>
+            <Button Grid.Row="3" Grid.Column="0" Command="{Binding Add25Command}" CommandParameter="25" BackgroundColor="LightGray" Text="25" Margin="4"/>
+            <Button Grid.Row="3" Grid.Column="1" Command="{Binding Add50Command}" CommandParameter="50" BackgroundColor="LightGray" Text="50" Margin="4"/>
+            <Button Grid.Row="3" Grid.Column="2" BackgroundColor="LightGray" Grid.ColumnSpan="2" Text="x2" Margin="4" Command="{Binding OnToggleX2Command}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding X2IsChecked}" Value="True">
+                        <Setter Property="BackgroundColor" Value="LawnGreen"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="4" BackgroundColor="LightGray" Grid.ColumnSpan="2" Text="x3" Margin="4" Command="{Binding OnToggleX3Command}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding X3IsChecked}" Value="True">
+                        <Setter Property="BackgroundColor" Value="LawnGreen"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="6" BackgroundColor="LightGray" Command="{Binding UndoCommand}" ImageSource="./Resources/Images/undo.svg" Margin="4"/>
             
         </Grid>
     </Grid>
