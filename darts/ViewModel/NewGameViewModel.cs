@@ -10,6 +10,7 @@ namespace darts.ViewModel;
 public class NewGameViewModel : BaseViewModel
 {
     private readonly IGameService _gameService;
+    private readonly ILoadingService _loadingService;
     public ICommand StartNewGameCommand { get; set; }
     public ICommand AddNewUserCommand { get; set; }
     public ICommand RemoveUserCommand { get; set; }
@@ -32,9 +33,10 @@ public class NewGameViewModel : BaseViewModel
     }
     public ObservableCollection<User> Users { get; set; }
     
-    public NewGameViewModel(IGameService gameService)
+    public NewGameViewModel(IGameService gameService, ILoadingService loadingService)
     {
         _gameService = gameService;
+        _loadingService = loadingService;
 
         Games = GameModes.Modes;
         Users = [];
@@ -63,15 +65,19 @@ public class NewGameViewModel : BaseViewModel
 
     private async void StartNewGame()
     {
-        var selectedGameMode = Games.SingleOrDefault(x => x.IsSelected);
-        if (selectedGameMode is null) 
+        using (await _loadingService.Show())
         {
-            var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
-            await toast.Show();
-            return;
+            var selectedGameMode = Games.SingleOrDefault(x => x.IsSelected);
+            if (selectedGameMode is null) 
+            {
+                var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
+                await toast.Show();
+                return;
+            }
+            _gameService.StartNewGame(selectedGameMode, Users.ToList());
+            await Shell.Current.GoToAsync(nameof(GamePage));
         }
-        _gameService.StartNewGame(selectedGameMode, Users.ToList());
-        await Shell.Current.GoToAsync(nameof(GamePage));
+        
     }
 
     private async void AddNewUser()
@@ -82,6 +88,16 @@ public class NewGameViewModel : BaseViewModel
             if (currentPage is not null)
             {
                 var toast = Toast.Make("Taki użytkownik już istnieje", ToastDuration.Long);
+                await toast.Show();
+            }
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(NewUserName))
+        {
+            if (currentPage is not null)
+            {
+                var toast = Toast.Make("Należy wpisać poprawnego użytkownika", ToastDuration.Long);
                 await toast.Show();
             }
             return;
