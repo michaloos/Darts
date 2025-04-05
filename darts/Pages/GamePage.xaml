@@ -29,41 +29,41 @@
                                 <RowDefinition Height="0.25*"/>
                                 <RowDefinition Height="0.75*"/>
                             </Grid.RowDefinitions>
-        
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.25*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="0.25*"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="{Binding User.Name}" FontAttributes="Bold"/>
                             <Border Grid.Row="1" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white">
-                                <Label Text="{Binding Position}" FontAttributes="Bold"/>
+                                <Label Text="{Binding Position}" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/>
                             </Border>
                             <Border Grid.Row="1" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white">
-                                <Label Text="{Binding CurrentScore}" FontAttributes="Bold"/>
+                                <Label Text="{Binding CurrentScore}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontAttributes="Bold" FontSize="24"/>
                             </Border>
                             <Grid Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" ColumnSpacing="4">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-        
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.20*"/>
                                     <ColumnDefinition Width="0.20*"/>
                                     <ColumnDefinition Width="0.20*"/>
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='0'}"/>
                                 </Border>
                                 <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='1'}"/>
                                 </Border>
                                 <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40"/>
+                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='2'}"/>
                                 </Border>
                             </Grid>
-                            
                         </Grid>
                     </Frame>
                 </DataTemplate>

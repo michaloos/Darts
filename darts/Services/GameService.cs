@@ -7,10 +7,11 @@ namespace darts.Services;
 public class GameService : IGameService
 {
     public required ObservableCollection<UserGame> GameUsers { get; set; }
+    public UserGame? CurrentUserGame { get; set; }
     public required GameMode GameMode { get; set; }
     public void StartNewGame(GameMode gameMode, List<User> users)
     {
-        GameUsers = new ObservableCollection<UserGame>();
+        GameUsers = [];
         GameMode = gameMode;
         users.ForEach(user =>
         {
@@ -19,10 +20,63 @@ public class GameService : IGameService
                 Id = Guid.NewGuid(),
                 User = user,
                 Position = null,
-                Shoots = new List<UserGameShoot>(),
+                Shoots = new ObservableCollection<UserGameShoot>(),
                 CurrentScore = null,
-                CurrentPlayer = users.First().Equals(user),
+                CurrentPlayer = false,
+                Round = 1,
             });
         });
+        CurrentUserGame =  GameUsers.First();
+        CurrentUserGame!.CurrentPlayer = true;
+    }
+
+    public void MoveToTheNextPlayer()
+    {
+        if (CurrentUserGame is null) throw new InvalidOperationException("No player found");
+        var currentUserGameIndex = GameUsers.IndexOf(CurrentUserGame);
+        if (currentUserGameIndex < 0) return;
+        CurrentUserGame.CurrentPlayer = false;
+        if(currentUserGameIndex == GameUsers.Count - 1)
+        {
+            CurrentUserGame = GameUsers.ElementAt(0);
+            UpdatePositions();
+        }
+        else
+        {
+            CurrentUserGame = GameUsers.ElementAt(currentUserGameIndex + 1);
+        }
+        CurrentUserGame.CurrentPlayer = true;
+        if (currentUserGameIndex != GameUsers.Count - 1) return;
+        foreach (var gameUser in GameUsers)
+            gameUser.Round++;
+    }
+
+    private void UpdatePositions()
+    {
+        var iteration = 1;
+        foreach (var userGame in GameUsers.OrderByDescending(x => x.CurrentScore)) {
+            userGame.Position = iteration;
+            iteration++;
+        }
+    }
+
+    public void UndoShoot(Guid userGameId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void AddScore(int score)
+    {
+        if (CurrentUserGame is null) return;
+        CurrentUserGame.Shoots.Add(new UserGameShoot
+        {
+            Score = score,
+            ShootNumber = CurrentUserGame.Shoots.Count + 1,
+        });
+        var updatedShoots = new ObservableCollection<UserGameShoot>(CurrentUserGame.Shoots);
+        CurrentUserGame.Shoots = updatedShoots;
+        CurrentUserGame.CurrentScore = CurrentUserGame.Shoots.Sum(x => x.Score);
+        if(CurrentUserGame.Shoots.Count % 3 == 0)
+            MoveToTheNextPlayer();
     }
 }

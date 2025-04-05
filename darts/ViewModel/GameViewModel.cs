@@ -6,76 +6,16 @@ using static System.Int32;
 
 namespace darts.ViewModel;
 
-// public class GameViewModel : BaseViewModel
-// {
-//     private IGameService GameService { get; set; }
-//     public ObservableCollection<UserGame> UserGames { get; set; }
-//     public ICommand AddScoreCommand { get; set; }
-//     public ICommand OnToggleX2Command { get; set; }
-//     public ICommand OnToggleX3Command { get; set; }
-//     public ICommand UndoCommand { get; set; }
-//
-//     public bool X2IsChecked
-//     {
-//         get => _x2IsChecked;
-//         set {
-//             if (!SetProperty(ref _x2IsChecked, value)) return;
-//             OnPropertyChanged(nameof(CanToggleX3));
-//             OnPropertyChanged(nameof(CanToggleX2));
-//             OnPropertyChanged(nameof(IsAnyMultiplierChecked));
-//         }
-//     }
-//
-//     public bool X3IsChecked
-//     {
-//         get => _x3IsChecked; 
-//         set {
-//             if (!SetProperty(ref _x3IsChecked, value)) return;
-//             OnToggleX2Command.CanExecuteChanged += (s, e) => { };
-//             UndoCommand.CanExecuteChanged += (s, e) => { };
-//             OnPropertyChanged(nameof(CanToggleX3));
-//             OnPropertyChanged(nameof(CanToggleX2));
-//             OnPropertyChanged(nameof(IsAnyMultiplierChecked));
-//         }
-//     }
-//     
-//     public bool CanToggleX2 => !_x3IsChecked;
-//     public bool CanToggleX3 => !_x2IsChecked;
-//     private bool _x2IsChecked;
-//     private bool _x3IsChecked;
-//     public GameViewModel(IGameService gameService)
-//     {
-//         GameService = gameService;
-//         UserGames = gameService.GameUsers;
-//         AddScoreCommand = new Command<string>(AddScore);
-//         OnToggleX2Command = new Command(() => X2IsChecked = !X2IsChecked, () => CanToggleX2);
-//         OnToggleX3Command = new Command(() => X3IsChecked = !X3IsChecked, () => CanToggleX3);
-//         UndoCommand = new Command(Undo, () => !IsAnyMultiplierChecked());
-//     }
-//
-//     private bool IsAnyMultiplierChecked()
-//         => _x2IsChecked || _x3IsChecked;
-//     
-//     private void Undo()
-//     {
-//         
-//     }
-//
-//     private void AddScore(string score)
-//     {
-//         var tryParse = TryParse(score, out var result);
-//         if (!tryParse) return;
-//         var multiplier = X2IsChecked ? 2 : X3IsChecked ? 3 : 1;
-//         X2IsChecked = false;
-//         X3IsChecked = false;
-//     }
-// }
-
 public class GameViewModel : BaseViewModel
 {
     private readonly IGameService _gameService;
     
-    public ObservableCollection<UserGame> UserGames { get; set; }
+    private ObservableCollection<UserGame> _userGames;
+    public ObservableCollection<UserGame> UserGames
+    {
+        get => _userGames;
+        set { _userGames = value; OnPropertyChanged(); }
+    }
     
     public Command AddScoreCommand { get; }
     public Command OnToggleX2Command { get; }
@@ -119,8 +59,8 @@ public class GameViewModel : BaseViewModel
         AddScoreCommand = new Command<string>(AddScore);
         OnToggleX2Command = new Command(() => X2IsChecked = !X2IsChecked, () => CanToggleX2);
         OnToggleX3Command = new Command(() => X3IsChecked = !X3IsChecked, () => CanToggleX3);
-        Add25Command = new Command<string>(AddScore, (string value) => !IsAnyMultiplierChecked);
-        Add50Command = new Command<string>(AddScore, (string value) => !IsAnyMultiplierChecked);
+        Add25Command = new Command<string>(AddScore, value => !IsAnyMultiplierChecked);
+        Add50Command = new Command<string>(AddScore, value => !IsAnyMultiplierChecked);
         UndoCommand = new Command(Undo, () => !IsAnyMultiplierChecked);
     }
 
@@ -144,9 +84,14 @@ public class GameViewModel : BaseViewModel
 
     private void AddScore(string score)
     {
-        if (!int.TryParse(score, out var result)) return;
+        if (!TryParse(score, out var result)) return;
 
         var multiplier = X2IsChecked ? 2 : X3IsChecked ? 3 : 1;
+        var finalShootScore = multiplier * result;
+        _gameService.AddScore(finalShootScore);
+        
+        OnPropertyChanged(nameof(UserGames));
+        
         X2IsChecked = false;
         X3IsChecked = false;
     }
