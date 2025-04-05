@@ -9,8 +9,9 @@ namespace darts;
 
 public partial class LoadingPopup : PopupPage
 {
-    public LoadingPopup()
+    public LoadingPopup(string loadingMessage)
     {
         InitializeComponent();
+        LoadingLabel.Text = loadingMessage;
     }
 }

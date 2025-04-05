@@ -10,7 +10,7 @@ public class LoadingService : ILoadingService, IDisposable
 
     public async Task<IDisposable> Show()
     {
-        await navigation.PushAsync(new LoadingPopup(), true);
+        await navigation.PushAsync(new LoadingPopup("Tworzenie gry"), true);
         return this;
     }
 

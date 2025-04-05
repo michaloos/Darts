@@ -8,6 +8,7 @@ public interface IGameService
     ObservableCollection<UserGame> GameUsers { get; set; }
     UserGame? CurrentUserGame { get; set; }
     void StartNewGame(GameMode gameMode, List<User> users);
+    void EndGame();
     void MoveToTheNextPlayer();
     void UndoShoot(Guid userGameId);
     void AddScore(int score);

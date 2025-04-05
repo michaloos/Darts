@@ -19,8 +19,8 @@
                 IsRunning="True"
                 IsVisible="True"/>
             <Label
+                x:Name="LoadingLabel"
                 HorizontalOptions="Center"
-                Text="Loading..."
                 VerticalOptions="Center"/>
         </VerticalStackLayout>
     </Frame>

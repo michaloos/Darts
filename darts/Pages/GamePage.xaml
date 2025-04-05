@@ -42,28 +42,45 @@
                             <Border Grid.Row="1" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white">
                                 <Label Text="{Binding CurrentScore}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontAttributes="Bold" FontSize="24"/>
                             </Border>
-                            <Grid Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" ColumnSpacing="4">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.20*"/>
-                                    <ColumnDefinition Width="0.20*"/>
-                                    <ColumnDefinition Width="0.20*"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='0'}"/>
-                                </Border>
-                                <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='1'}"/>
-                                </Border>
-                                <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40">
-                                    <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                           Text="{Binding Shoots, Converter={StaticResource ShootRoundConverter}, ConverterParameter='2'}"/>
-                                </Border>
-                            </Grid>
+                            
+                            <CollectionView Grid.Row="1" Grid.Column="1"
+                                            ItemsSource="{Binding VisibleShoots}"
+                                            ItemsLayout="HorizontalList"
+                                            HorizontalOptions="Center"
+                                            SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:UserGameShoot">
+                                        <Border StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40" WidthRequest="40" Margin="2">
+                                            <Label HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Text="{Binding Score, TargetNullValue=''}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                            
+                            <!-- <Grid Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" ColumnSpacing="4"> -->
+                            <!--     <Grid.RowDefinitions> -->
+                            <!--         <RowDefinition Height="*"/> -->
+                            <!--     </Grid.RowDefinitions> -->
+                            <!--     <Grid.ColumnDefinitions> -->
+                            <!--         <ColumnDefinition Width="0.20*"/> -->
+                            <!--         <ColumnDefinition Width="0.20*"/> -->
+                            <!--         <ColumnDefinition Width="0.20*"/> -->
+                            <!--     </Grid.ColumnDefinitions> -->
+                            <!--     <Border Grid.Row="0" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40"> -->
+                            <!--         <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" -->
+                            <!--                Text="{Binding VisibleShoots[0].Score, TargetNullValue=''}"/> -->
+                            <!--     </Border> -->
+                            <!--     <Border Grid.Row="0" Grid.Column="1" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40"> -->
+                            <!--         <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" -->
+                            <!--                Text="{Binding VisibleShoots[1].Score, TargetNullValue=''}"/> -->
+                            <!--     </Border> -->
+                            <!--     <Border Grid.Row="0" Grid.Column="2" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40"> -->
+                            <!--         <Label WidthRequest="40" HeightRequest="40" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" -->
+                            <!--                Text="{Binding VisibleShoots[2].Score, TargetNullValue=''}"/> -->
+                            <!--     </Border> -->
+                            <!-- </Grid> -->
                         </Grid>
                     </Frame>
                 </DataTemplate>

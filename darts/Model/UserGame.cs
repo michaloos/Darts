@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -7,7 +8,7 @@ namespace darts.Model;
 public class UserGame : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null) 
+    public void OnPropertyChanged([CallerMemberName] string propertyName = null) 
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     public required Guid Id { get; set; }
@@ -19,13 +20,46 @@ public class UserGame : INotifyPropertyChanged
         get => _position;
         set { _position = value; OnPropertyChanged(); }
     }
-
-    private ObservableCollection<UserGameShoot> _shoots = new();
+    
     public ObservableCollection<UserGameShoot> Shoots
     {
         get => _shoots;
-        set { _shoots = value; OnPropertyChanged(); }
+        set
+        {
+            if (_shoots != value)
+            {
+                if (_shoots != null)
+                    _shoots.CollectionChanged -= Shoots_CollectionChanged;
+
+                _shoots = value;
+                _shoots.CollectionChanged += Shoots_CollectionChanged;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisibleShoots));
+            }
+        }
     }
+
+    private void Shoots_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(VisibleShoots));
+    }
+
+    public bool CurrentPlayer
+    {
+        get => _currentPlayer;
+        set
+        {
+            if (_currentPlayer != value)
+            {
+                _currentPlayer = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisibleShoots));
+            }
+        }
+    }
+
+    private ObservableCollection<UserGameShoot> _shoots = new();
 
     private int? _currentScore;
     public int? CurrentScore
@@ -35,11 +69,6 @@ public class UserGame : INotifyPropertyChanged
     }
 
     private bool _currentPlayer;
-    public bool CurrentPlayer
-    {
-        get => _currentPlayer;
-        set { _currentPlayer = value; OnPropertyChanged(); }
-    }
 
     private int _round;
     public int Round
@@ -48,10 +77,22 @@ public class UserGame : INotifyPropertyChanged
         set { _round = value; OnPropertyChanged(); }
     }
     
-    // public ObservableCollection<UserGameShoot> GetShootsForRound(int round)
-    // {
-    //     return new ObservableCollection<UserGameShoot>(
-    //         Shoots.Where(shoot => shoot.Round == round)
-    //     );
-    // }
+    private ObservableCollection<UserGameShoot> _visibleShoots = new();
+    public ObservableCollection<UserGameShoot> VisibleShoots
+    {
+        get
+        {
+            var currentRound = Round;
+            var currentShoots = Shoots
+                .Where(s => s.Round == currentRound)
+                .ToList();
+            
+            while (currentShoots.Count < 3) {
+                currentShoots.Add(new UserGameShoot { Score = null, Round = currentRound, ShootNumber = Shoots.Count + 1});
+            }
+
+            return new ObservableCollection<UserGameShoot>(currentShoots);
+        }
+        set { _visibleShoots = value; OnPropertyChanged(); }
+    }
 }

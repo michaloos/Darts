@@ -30,9 +30,15 @@ public class GameService : IGameService
         CurrentUserGame!.CurrentPlayer = true;
     }
 
+    public void EndGame()
+    {
+        throw new NotImplementedException();
+    }
+
     public void MoveToTheNextPlayer()
     {
         if (CurrentUserGame is null) throw new InvalidOperationException("No player found");
+        CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
         var currentUserGameIndex = GameUsers.IndexOf(CurrentUserGame);
         if (currentUserGameIndex < 0) return;
         CurrentUserGame.CurrentPlayer = false;
@@ -46,6 +52,7 @@ public class GameService : IGameService
             CurrentUserGame = GameUsers.ElementAt(currentUserGameIndex + 1);
         }
         CurrentUserGame.CurrentPlayer = true;
+        CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
         if (currentUserGameIndex != GameUsers.Count - 1) return;
         foreach (var gameUser in GameUsers)
             gameUser.Round++;
@@ -72,10 +79,16 @@ public class GameService : IGameService
         {
             Score = score,
             ShootNumber = CurrentUserGame.Shoots.Count + 1,
+            Round = CurrentUserGame.Round,
         });
         var updatedShoots = new ObservableCollection<UserGameShoot>(CurrentUserGame.Shoots);
         CurrentUserGame.Shoots = updatedShoots;
         CurrentUserGame.CurrentScore = CurrentUserGame.Shoots.Sum(x => x.Score);
+        CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
+        var currentRound = CurrentUserGame.Round;
+        CurrentUserGame.VisibleShoots = new ObservableCollection<UserGameShoot>(
+            CurrentUserGame.Shoots.Where(s => s.Round == currentRound)
+        );
         if(CurrentUserGame.Shoots.Count % 3 == 0)
             MoveToTheNextPlayer();
     }
