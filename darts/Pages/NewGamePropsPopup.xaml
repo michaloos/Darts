@@ -1,0 +1,14 @@
+<toolkit:Popup
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="darts.NewGamePropsPopup"
+    CanBeDismissedByTappingOutsideOfPopup="False">
+
+    <Border Padding="20" BackgroundColor="DarkGray" HorizontalOptions="Center" VerticalOptions="Center">
+        <StackLayout Spacing="10">
+            <Label Text="To jest mój custom popup 😎" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" />
+            <Button Text="Zamknij" Clicked="OnCloseClicked" />
+        </StackLayout>
+    </Border>
+</toolkit:Popup>

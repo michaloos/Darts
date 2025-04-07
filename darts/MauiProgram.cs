@@ -38,6 +38,9 @@ public static class MauiProgram
 			});
 		builder.Services.AddSingleton<IGameService, GameService>();
 		builder.Services.AddTransient<ILoadingService, LoadingService>();
+		builder.Services.AddTransient<NewGamePropsPopup>();
+		builder.Services.AddTransient<NewGamePropsPopupViewModel>(); 
+		builder.Services.AddTransientPopup<NewGamePropsPopup, NewGamePropsPopupViewModel>();
 		builder.Services.AddTransient<NewGameViewModel>();
 		builder.Services.AddTransient<NewGamePage>();
 		builder.Services.AddTransient<GameViewModel>();

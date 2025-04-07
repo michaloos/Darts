@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using darts.Model;
 using darts.Services.Interfaces;
 
@@ -11,6 +12,7 @@ public class NewGameViewModel : BaseViewModel
 {
     private readonly IGameService _gameService;
     private readonly ILoadingService _loadingService;
+    private readonly IPopupService _popupService;
     public ICommand StartNewGameCommand { get; set; }
     public ICommand AddNewUserCommand { get; set; }
     public ICommand RemoveUserCommand { get; set; }
@@ -33,10 +35,11 @@ public class NewGameViewModel : BaseViewModel
     }
     public ObservableCollection<User> Users { get; set; }
     
-    public NewGameViewModel(IGameService gameService, ILoadingService loadingService)
+    public NewGameViewModel(IGameService gameService, ILoadingService loadingService, IPopupService popupService)
     {
         _gameService = gameService;
         _loadingService = loadingService;
+        _popupService = popupService;
 
         Games = GameModes.Modes;
         Users = [];
@@ -65,6 +68,8 @@ public class NewGameViewModel : BaseViewModel
 
     private async void StartNewGame()
     {
+        var result = await _popupService.ShowPopupAsync<NewGamePropsPopupViewModel>();
+        
         using (await _loadingService.Show())
         {
             var selectedGameMode = Games.SingleOrDefault(x => x.IsSelected);

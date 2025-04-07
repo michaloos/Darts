@@ -9,6 +9,8 @@ public class GameService : IGameService
     public required ObservableCollection<UserGame> GameUsers { get; set; }
     public UserGame? CurrentUserGame { get; set; }
     public required GameMode GameMode { get; set; }
+    private bool _isNewRoundStarting = false;
+
     public void StartNewGame(GameMode gameMode, List<User> users)
     {
         GameUsers = [];
@@ -38,26 +40,28 @@ public class GameService : IGameService
     public void MoveToTheNextPlayer()
     {
         if (CurrentUserGame is null) throw new InvalidOperationException("No player found");
-        CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
-        var currentUserGameIndex = GameUsers.IndexOf(CurrentUserGame);
-        if (currentUserGameIndex < 0) return;
-        CurrentUserGame.CurrentPlayer = false;
-        if(currentUserGameIndex == GameUsers.Count - 1)
+
+        var currentIndex = GameUsers.IndexOf(CurrentUserGame);
+        if (currentIndex < 0) return;
+
+        var previousPlayer = CurrentUserGame;
+        previousPlayer.CurrentPlayer = false;
+        previousPlayer.OnPropertyChanged(nameof(UserGame.VisibleShoots));
+        
+        if (currentIndex == GameUsers.Count - 1)
         {
-            CurrentUserGame = GameUsers.ElementAt(0);
+            CurrentUserGame = GameUsers.First();
             UpdatePositions();
         }
         else
         {
-            CurrentUserGame = GameUsers.ElementAt(currentUserGameIndex + 1);
+            CurrentUserGame = GameUsers[currentIndex + 1];
         }
-        CurrentUserGame.CurrentPlayer = true;
-        CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
-        if (currentUserGameIndex != GameUsers.Count - 1) return;
-        foreach (var gameUser in GameUsers)
-            gameUser.Round++;
-    }
 
+        CurrentUserGame.CurrentPlayer = true;
+        CurrentUserGame.OnPropertyChanged(nameof(UserGame.VisibleShoots));
+        CurrentUserGame.Round++;
+    }
     private void UpdatePositions()
     {
         var iteration = 1;
@@ -75,21 +79,21 @@ public class GameService : IGameService
     public void AddScore(int score)
     {
         if (CurrentUserGame is null) return;
+        
         CurrentUserGame.Shoots.Add(new UserGameShoot
         {
             Score = score,
             ShootNumber = CurrentUserGame.Shoots.Count + 1,
             Round = CurrentUserGame.Round,
         });
+        
         var updatedShoots = new ObservableCollection<UserGameShoot>(CurrentUserGame.Shoots);
         CurrentUserGame.Shoots = updatedShoots;
         CurrentUserGame.CurrentScore = CurrentUserGame.Shoots.Sum(x => x.Score);
+        
         CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
-        var currentRound = CurrentUserGame.Round;
-        CurrentUserGame.VisibleShoots = new ObservableCollection<UserGameShoot>(
-            CurrentUserGame.Shoots.Where(s => s.Round == currentRound)
-        );
-        if(CurrentUserGame.Shoots.Count % 3 == 0)
+
+        if (CurrentUserGame.Shoots.Count % 3 == 0)
             MoveToTheNextPlayer();
     }
 }
