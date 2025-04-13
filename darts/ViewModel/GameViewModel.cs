@@ -79,7 +79,8 @@ public class GameViewModel : BaseViewModel
 
     private void Undo()
     {
-        // Logika cofania
+        _gameService.UndoShoot();
+        OnPropertyChanged(nameof(UserGames));
     }
 
     private void AddScore(string score)

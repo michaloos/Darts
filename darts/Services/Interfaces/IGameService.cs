@@ -10,6 +10,7 @@ public interface IGameService
     void StartNewGame(GameMode gameMode, List<User> users);
     void EndGame();
     void MoveToTheNextPlayer();
-    void UndoShoot(Guid userGameId);
+    void MoveToThePreviousPlayer();
+    void UndoShoot();
     void AddScore(int score);
 }
