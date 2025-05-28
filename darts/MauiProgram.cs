@@ -51,6 +51,10 @@ public static class MauiProgram
 		builder.Services.AddTransient<GameViewModel>();
 		builder.Services.AddTransient<GamePage>();
 		builder.Services.AddTransient<LoadingPopup>();
+		builder.Services.AddTransient<HistoryViewModel>();
+		builder.Services.AddTransient<HistoryPage>();
+		builder.Services.AddTransient<UsersPage>();
+		builder.Services.AddTransient<UsersPageViewModel>();
 		builder.ConfigureMopups();
 
 #if DEBUG

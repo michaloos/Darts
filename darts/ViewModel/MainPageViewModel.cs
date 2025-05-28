@@ -7,6 +7,7 @@ public class MainPageViewModel : INotifyPropertyChanged
 {
     public Command NewGamePageCommand { get; private set; }
     public Command HistoryPageCommand { get; private set; }
+    public Command UsersPageCommand { get; private set; }
 
     public MainPageViewModel()
     {
@@ -15,6 +16,9 @@ public class MainPageViewModel : INotifyPropertyChanged
 
         HistoryPageCommand = new Command(async void () =>
             await Shell.Current.GoToAsync(nameof(HistoryPage)));
+
+        UsersPageCommand = new Command(async void () =>
+            await Shell.Current.GoToAsync(nameof(UsersPage)));
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;

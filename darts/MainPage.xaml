@@ -16,6 +16,10 @@
                 Text="Nowa gra"
                 Command="{Binding NewGamePageCommand}"/>
             
+            <Button 
+                Text="Gracze"
+                Command="{Binding UsersPageCommand}"/>
+            
             <Button
                 Text="Historia"
                 Command="{Binding HistoryPageCommand}"/>
