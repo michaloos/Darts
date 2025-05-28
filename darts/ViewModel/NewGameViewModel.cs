@@ -3,8 +3,8 @@ using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using darts.Core.Interface;
 using darts.Core.Model;
-using darts.Services.Interfaces;
 
 namespace darts.ViewModel;
 

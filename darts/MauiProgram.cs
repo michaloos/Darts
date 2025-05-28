@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
+using darts.Core.Interface;
 using darts.Data.Context;
 using darts.Services;
-using darts.Services.Interfaces;
 using darts.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -55,6 +55,10 @@ public static class MauiProgram
 		builder.Services.AddTransient<HistoryPage>();
 		builder.Services.AddTransient<UsersPage>();
 		builder.Services.AddTransient<UsersPageViewModel>();
+
+		builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+		builder.Services.AddScoped<IUserService, UserService>();
 		builder.ConfigureMopups();
 
 #if DEBUG

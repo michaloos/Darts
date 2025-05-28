@@ -1,4 +1,4 @@
-using darts.Services.Interfaces;
+using darts.Core.Interface;
 using Mopups.Interfaces;
 using Mopups.Services;
 

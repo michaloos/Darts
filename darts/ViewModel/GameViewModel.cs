@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using darts.Core.Interface;
 using darts.Core.Model;
-using darts.Services.Interfaces;
 using static System.Int32;
 
 namespace darts.ViewModel;

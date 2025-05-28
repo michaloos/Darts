@@ -1,4 +1,4 @@
-namespace darts.Services.Interfaces;
+namespace darts.Core.Interface;
 
 public interface ILoadingService
 {

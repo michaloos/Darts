@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using darts.Core.Model;
 
-namespace darts.Services.Interfaces;
+namespace darts.Core.Interface;
 
 public interface IGameService
 {
