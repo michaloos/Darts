@@ -11,7 +11,7 @@ using darts.Data.Context;
 namespace darts.Data.Migrations
 {
     [DbContext(typeof(DartsDbContext))]
-    [Migration("20250527204251_InitMigration")]
+    [Migration("20250528205257_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace darts.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
 
-            modelBuilder.Entity("darts.Data.Model.User", b =>
+            modelBuilder.Entity("darts.Core.Model.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

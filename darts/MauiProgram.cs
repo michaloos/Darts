@@ -41,6 +41,14 @@ public static class MauiProgram
 			});
 		builder.Services.AddDbContext<DartsDbContext>(options =>
 			options.UseSqlite($"Data Source={dbPath}"));
+		
+		using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+		{
+			var db = scope.ServiceProvider.GetRequiredService<DartsDbContext>();
+			db.Database.Migrate();
+		}
+
+		
 		builder.Services.AddSingleton<IGameService, GameService>();
 		builder.Services.AddTransient<ILoadingService, LoadingService>();
 		builder.Services.AddTransient<NewGamePropsPopup>();

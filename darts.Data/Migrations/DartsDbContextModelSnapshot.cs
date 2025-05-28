@@ -17,7 +17,7 @@ namespace darts.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
 
-            modelBuilder.Entity("darts.Data.Model.User", b =>
+            modelBuilder.Entity("darts.Core.Model.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

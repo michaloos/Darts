@@ -2,13 +2,26 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModel="clr-namespace:darts.ViewModel"
              x:Class="darts.UsersPage">
-    <ContentPage.BindingContext>
-        <viewModel:UsersPageViewModel/>
-    </ContentPage.BindingContext>
     
-    <ContentPage.Content>
-        
-    </ContentPage.Content>
+    <StackLayout Padding="20">
+    
+        <Entry Placeholder="Name"
+               Text="{Binding NewUserName}" />
+
+        <Button Text="Add" Command="{Binding AddUserCommand}" />
+        <Button Text="Update" Command="{Binding UpdateUserCommand}" />
+        <Button Text="Delete" Command="{Binding DeleteUserCommand}" />
+
+        <ListView ItemsSource="{Binding Users}"
+                  SelectedItem="{Binding SelectedUser}"
+                  HeightRequest="300">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    
+        </StackLayout>
 </ContentPage>
