@@ -1,10 +1,9 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace darts.Model;
+namespace darts.Data.Model;
 
 public class UserGame : INotifyPropertyChanged
 {

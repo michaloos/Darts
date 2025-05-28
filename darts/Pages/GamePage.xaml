@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
-             xmlns:models="clr-namespace:darts.Model"
+             xmlns:model1="clr-namespace:darts.Data.Model;assembly=darts.Data"
              x:Class="darts.GamePage">
     <Grid VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
@@ -17,7 +17,7 @@
         
         <CollectionView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding UserGames}">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:UserGame">
+                <DataTemplate x:DataType="model1:UserGame">
                     <Frame HeightRequest="100" Margin="8" Padding="8" CornerRadius="8" BorderColor="SlateGray" HasShadow="True">
                         <Frame.Triggers>
                             <DataTrigger TargetType="Frame" Binding="{Binding CurrentPlayer}" Value="True">
@@ -49,7 +49,7 @@
                                             HorizontalOptions="Center"
                                             SelectionMode="None">
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:UserGameShoot">
+                                    <DataTemplate x:DataType="model1:UserGameShoot">
                                         <Border StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white" HeightRequest="40" WidthRequest="40" Margin="2">
                                             <Label HorizontalTextAlignment="Center"
                                                    VerticalTextAlignment="Center"

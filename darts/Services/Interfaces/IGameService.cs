@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using darts.Model;
+using darts.Data.Model;
 
 namespace darts.Services.Interfaces;
 

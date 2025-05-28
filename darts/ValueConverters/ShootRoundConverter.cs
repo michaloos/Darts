@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
-using darts.Model;
+using darts.Data.Model;
 
 namespace darts.ValueConverters;
 

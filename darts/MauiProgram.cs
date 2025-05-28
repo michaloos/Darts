@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui;
+using darts.Data.Context;
 using darts.Services;
 using darts.Services.Interfaces;
 using darts.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
 
@@ -11,6 +13,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
+		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "darts.db");
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
@@ -36,6 +39,8 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+		builder.Services.AddDbContext<DartsDbContext>(options =>
+			options.UseSqlite($"Data Source={dbPath}"));
 		builder.Services.AddSingleton<IGameService, GameService>();
 		builder.Services.AddTransient<ILoadingService, LoadingService>();
 		builder.Services.AddTransient<NewGamePropsPopup>();
