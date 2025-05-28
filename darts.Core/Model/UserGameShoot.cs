@@ -1,4 +1,4 @@
-namespace darts.Data.Model;
+namespace darts.Core.Model;
 
 public class UserGameShoot
 {

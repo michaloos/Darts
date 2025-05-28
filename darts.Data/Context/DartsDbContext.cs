@@ -1,4 +1,4 @@
-using darts.Data.Model;
+using darts.Core.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

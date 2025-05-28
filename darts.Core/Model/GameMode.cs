@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace darts.Data.Model;
+namespace darts.Core.Model;
 
 public class GameMode : INotifyPropertyChanged
 {

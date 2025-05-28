@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace darts.Data.Model;
+namespace darts.Core.Model;
 
 public class UserGame : INotifyPropertyChanged
 {

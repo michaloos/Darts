@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using darts.Data.Model;
+using darts.Core.Model;
 using darts.Services.Interfaces;
 using static System.Int32;
 

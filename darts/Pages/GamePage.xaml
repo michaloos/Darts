@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
-             xmlns:model1="clr-namespace:darts.Data.Model;assembly=darts.Data"
+             xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
              x:Class="darts.GamePage">
     <Grid VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>

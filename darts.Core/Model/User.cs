@@ -1,6 +1,6 @@
 using darts.Data.Interfaces;
 
-namespace darts.Data.Model;
+namespace darts.Core.Model;
 
 public class User : IEntity
 {

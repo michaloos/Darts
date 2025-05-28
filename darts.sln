@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "darts", "darts\darts.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "darts.Data", "darts.Data\darts.Data.csproj", "{DAAA6DCB-2483-47C0-B1F4-E4157962A9C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "darts.Core", "darts.Core\darts.Core.csproj", "{189F6B9E-E6C4-4BC1-AA28-8CDE28386E49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{DAAA6DCB-2483-47C0-B1F4-E4157962A9C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAAA6DCB-2483-47C0-B1F4-E4157962A9C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAAA6DCB-2483-47C0-B1F4-E4157962A9C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{189F6B9E-E6C4-4BC1-AA28-8CDE28386E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189F6B9E-E6C4-4BC1-AA28-8CDE28386E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189F6B9E-E6C4-4BC1-AA28-8CDE28386E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189F6B9E-E6C4-4BC1-AA28-8CDE28386E49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
