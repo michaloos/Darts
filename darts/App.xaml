@@ -10,7 +10,9 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <valueConverters:SelectedItemEqualsConverter x:Key="SelectedItemEqualsConverter" />
             <valueConverters:ShootRoundConverter x:Key="ShootRoundConverter"/>
+            <valueConverters:IsSelectedItemConverter x:Key="IsSelectedItemConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -44,7 +44,7 @@
                       SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model1:User">
-                        <Frame Margin="8" Padding="4" CornerRadius="8" BorderColor="SlateGray" HasShadow="True">
+                        <Frame Margin="8" Padding="4" CornerRadius="6" BorderColor="SlateGray" HasShadow="True">
                             <Grid Padding="4">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>

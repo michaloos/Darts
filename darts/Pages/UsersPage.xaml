@@ -1,27 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:darts.ViewModel"
+             xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
+             xmlns:converters="clr-namespace:darts.ValueConverters"
+             x:DataType="viewModel:UsersPageViewModel"
              x:Class="darts.UsersPage">
     
-    <StackLayout Padding="20">
-    
-        <Entry Placeholder="Name"
+    <Grid VerticalOptions="FillAndExpand" Padding="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Placeholder="Nazwa gracza"
                Text="{Binding NewUserName}" />
+        
+        <Button Grid.Row="1" Grid.Column="0" Text="Dodaj" Command="{Binding AddUserCommand}" Margin="4"/>
+        <Button Grid.Row="1" Grid.Column="1" Text="Aktualizuj" Command="{Binding UpdateUserCommand}" Margin="4"/>
+        <Button Grid.Row="1" Grid.Column="2" Text="Usuń" Command="{Binding DeleteUserCommand}" Margin="4"/>
+        
+        <CollectionView Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                ItemsSource="{Binding Users}"
+                SelectionMode="Single"
+                SelectedItem="{Binding SelectedUser}"
+                BackgroundColor="Transparent">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model1:User">
+                    <Grid Margin="6"
+                          Padding="12"
+                          BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Fill">
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="Grid.BackgroundColor" 
+                                                Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                        <Setter Property="Grid.Scale" Value="1.0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="Grid.BackgroundColor" Value="{StaticResource Primary}" />
+                                        <Setter Property="Grid.Scale" Value="1.03" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
-        <Button Text="Add" Command="{Binding AddUserCommand}" />
-        <Button Text="Update" Command="{Binding UpdateUserCommand}" />
-        <Button Text="Delete" Command="{Binding DeleteUserCommand}" />
-
-        <ListView ItemsSource="{Binding Users}"
-                  SelectedItem="{Binding SelectedUser}"
-                  HeightRequest="300">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextCell Text="{Binding Name}" />
+                        <Label Text="{Binding Name}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Start" />
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    
-        </StackLayout>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

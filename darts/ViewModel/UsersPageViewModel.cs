@@ -14,6 +14,7 @@ public class UsersPageViewModel : BaseViewModel
     public ICommand AddUserCommand { get; }
     public ICommand UpdateUserCommand { get; }
     public ICommand DeleteUserCommand { get; }
+    public ICommand SelectionCommand { get; }
     public ObservableCollection<User> Users { get; } = new();
     private string? _newUserName;
     private User? _selectedUser;
@@ -36,6 +37,7 @@ public class UsersPageViewModel : BaseViewModel
         AddUserCommand = new Command(async void () => await AddUserAsync());
         UpdateUserCommand = new Command(async void () => await UpdateUserAsync());
         DeleteUserCommand = new Command(async void () => await DeleteUserAsync());
+        SelectionCommand = new Command<User>(user => { SelectedUser = user; });
     }
 
     private async Task LoadUsers()

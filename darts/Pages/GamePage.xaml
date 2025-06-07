@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
              xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
+             x:DataType="viewModel:GameViewModel"
              x:Class="darts.GamePage">
     <Grid VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
