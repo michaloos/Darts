@@ -35,38 +35,41 @@
                 BackgroundColor="Transparent">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model1:User">
-                    <Grid Margin="6"
-                          Padding="12"
-                          BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                          VerticalOptions="Center"
-                          HorizontalOptions="Fill">
-                        
+                    <Border x:Name="ItemBorder"
+                            Margin="6"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="12"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal">
                                     <VisualState.Setters>
-                                        <Setter Property="Grid.BackgroundColor" 
+                                        <Setter TargetName="ItemBorder" Property="BackgroundColor" 
                                                 Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-                                        <Setter Property="Grid.Scale" Value="1.0" />
+                                        <Setter TargetName="ItemBorder" Property="Scale" Value="1.0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Property="Grid.BackgroundColor" Value="{StaticResource Primary}" />
-                                        <Setter Property="Grid.Scale" Value="1.03" />
+                                        <Setter TargetName="ItemBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                        <Setter TargetName="ItemBorder" Property="Scale" Value="1.03" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Label Text="{Binding Name}"
-                               FontSize="14"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Start" />
-                    </Grid>
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding Name}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Start" />
+                        </HorizontalStackLayout>
+                    </Border>
                 </DataTemplate>
+
             </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
