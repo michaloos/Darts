@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
              xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
+             x:DataType="viewModel:NewGameViewModel"
              x:Class="darts.NewGamePage">
     
     <Grid VerticalOptions="FillAndExpand">
@@ -23,8 +24,7 @@
             
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.70*"/>
+                <RowDefinition Height="0.85*"/>
             </Grid.RowDefinitions>
             
             <Grid.ColumnDefinitions>
@@ -33,34 +33,52 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Gracze" FontSize="24"/>
             
-            <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Placeholder="Nazwa gracza" ClearButtonVisibility="WhileEditing"
-                   Text="{Binding NewUserName, Mode=TwoWay}" />
-            <Button Text="Dodaj" Grid.Row="0" Grid.Column="2" Command="{Binding AddNewUserCommand}" VerticalOptions="Center"/>
-            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="Gracze" FontSize="24"/>
-            
-            <CollectionView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" 
-                      ItemsSource="{Binding Users}"
-                      SelectionMode="None">
+            <CollectionView 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                Grid.ColumnSpan="3" 
+                ItemsSource="{Binding Users}"
+                SelectionMode="Multiple"
+                SelectedItems="{Binding SelectedUsers, Mode=TwoWay}"
+                SelectionChangedCommand="{Binding SelectUserCommand}"
+                BackgroundColor="Transparent">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model1:User">
-                        <Frame Margin="8" Padding="4" CornerRadius="6" BorderColor="SlateGray" HasShadow="True">
-                            <Grid Padding="4">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.90*"/>
-                                    <ColumnDefinition Width="0.10*"/>
-                                </Grid.ColumnDefinitions>
-                                
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold" VerticalOptions="Fill" VerticalTextAlignment="Center"/>
-                                <Button Grid.Row="0" Grid.Column="1" BackgroundColor="Red" HorizontalOptions="Center" Padding="8"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:NewGameViewModel}}, Path=RemoveUserCommand}" 
-                                        CommandParameter="{Binding Id}" ImageSource="./Resources/Images/delete.svg"/>
-                            </Grid>
-                        </Frame>
+                        <Border x:Name="ItemBorder"
+                            Margin="6"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+        
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemBorder" Property="BackgroundColor" 
+                                                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                            <Setter TargetName="ItemBorder" Property="Scale" Value="1.0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            <Setter TargetName="ItemBorder" Property="Scale" Value="1.03" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Name}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start" />
+                            </HorizontalStackLayout>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -78,45 +96,58 @@
             </Grid.ColumnDefinitions>
             
             <Label Grid.Row="0" Grid.Column="0"  Text="Gry" FontSize="24"/>
-            <CollectionView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Games}"
-                      SelectionMode="None">
+            
+            <CollectionView 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                ItemsSource="{Binding Games}"
+                SelectionMode="Single"
+                SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model1:GameMode">
-                        <Frame Margin="8" Padding="8" CornerRadius="8" BorderColor="SlateGray" HasShadow="True" InputTransparent="{Binding Disabled}">
-                            <Frame.Triggers>
-                                <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="True">
-                                    <Setter Property="BackgroundColor" Value="DarkGrey"/>
-                                </DataTrigger>
-                                <DataTrigger TargetType="Frame" Binding="{Binding Disabled}" Value="True">
-                                    <Setter Property="Opacity" Value="0.3"/>
-                                </DataTrigger>
-                            </Frame.Triggers>
-                            <Grid Padding="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.90*"/>
-                                    <ColumnDefinition Width="0.10*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name}" FontAttributes="Bold"
-                                       VerticalOptions="Fill" VerticalTextAlignment="Center"/>
-                            </Grid>
-                            
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding 
-                                    Source={RelativeSource AncestorType={x:Type viewModel:NewGameViewModel}}, Path=SelectGameModeCommand}"
-                                    CommandParameter="{Binding .}"/>
-                            </Frame.GestureRecognizers>
-                        </Frame>
+                        <Border x:Name="ItemGameBorder"
+                                Margin="6"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemGameBorder" Property="BackgroundColor" 
+                                                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                                            <Setter TargetName="ItemGameBorder" Property="Scale" Value="1.0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter TargetName="ItemGameBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            <Setter TargetName="ItemGameBorder" Property="Scale" Value="1.03" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Name}"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start" />
+                            </HorizontalStackLayout>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
         
-        <Button Grid.Row="2" Grid.Column="0" Padding="8" HorizontalOptions="Center"
-            Text="Rozpocznij grę" IsEnabled="{Binding CanStartNewGame}"
+        <Button 
+            Grid.Row="2" 
+            Grid.Column="0" 
+            Padding="8"
+            HorizontalOptions="Center"
+            Text="Rozpocznij grę"
+            IsEnabled="{Binding CanStartNewGame}"
             Command="{Binding StartNewGameCommand}"/>
         
     </Grid>

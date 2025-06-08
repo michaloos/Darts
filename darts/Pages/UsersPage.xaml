@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:darts.ViewModel"
              xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
-             xmlns:converters="clr-namespace:darts.ValueConverters"
              x:DataType="viewModel:UsersPageViewModel"
              x:Class="darts.UsersPage">
     
@@ -37,7 +36,7 @@
                 <DataTemplate x:DataType="model1:User">
                     <Border x:Name="ItemBorder"
                             Margin="6"
-                            StrokeShape="RoundRectangle 16"
+                            StrokeShape="RoundRectangle 8"
                             Padding="12"
                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
         

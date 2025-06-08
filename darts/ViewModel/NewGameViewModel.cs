@@ -10,13 +10,25 @@ namespace darts.ViewModel;
 
 public class NewGameViewModel : BaseViewModel
 {
+    private ObservableCollection<User> _users = [];
+    public ObservableCollection<User> Users
+    {
+        get => _users;
+        set => SetProperty(ref _users, value);
+    }
+    private ObservableCollection<object> _selectedUsers = [];
+    public ObservableCollection<object> SelectedUsers
+    {
+        get => _selectedUsers;
+        set => SetProperty(ref _selectedUsers, value);
+    }
+
     private readonly IGameService _gameService;
     private readonly ILoadingService _loadingService;
     private readonly IPopupService _popupService;
+    private readonly IUnitOfWork _unitOfWork;
     public ICommand StartNewGameCommand { get; set; }
-    public ICommand AddNewUserCommand { get; set; }
-    public ICommand RemoveUserCommand { get; set; }
-    public ICommand SelectGameModeCommand { get; set; }
+    public ICommand SelectUserCommand { get; set; }
 
     public bool CanStartNewGame
     {
@@ -24,47 +36,47 @@ public class NewGameViewModel : BaseViewModel
         set => SetProperty(ref _canStartNewGame, value);
     }
     public ObservableCollection<GameMode> Games { get; set; }
+    private GameMode? _selectedGameMode;
 
-    private string? _newUserName;
-    private bool _canStartNewGame;
-
-    public string NewUserName
+    public GameMode? SelectedGameMode
     {
-        get =>  _newUserName ?? "";
-        set => SetProperty(ref _newUserName, value);
+        get => _selectedGameMode;
+        set
+        {
+            SetProperty(ref _selectedGameMode, value);
+            SetCanStartNewGame();
+        }
     }
-    public ObservableCollection<User> Users { get; set; }
+
+    private bool _canStartNewGame;
     
-    public NewGameViewModel(IGameService gameService, ILoadingService loadingService, IPopupService popupService)
+    public NewGameViewModel(IGameService gameService,
+        ILoadingService loadingService, IPopupService popupService,
+        IUnitOfWork unitOfWork)
     {
         _gameService = gameService;
         _loadingService = loadingService;
         _popupService = popupService;
+        _unitOfWork = unitOfWork;
 
         Games = GameModes.Modes;
-        Users = [];
         StartNewGameCommand = new Command(StartNewGame);
-        AddNewUserCommand = new Command(AddNewUser);
-        RemoveUserCommand = new Command<Guid>(RemoveUser);
-        SelectGameModeCommand = new Command<GameMode>(OnGameModeSelected);
+        SelectUserCommand = new Command(SelectUserChanged);
     }
 
-    private void OnGameModeSelected(GameMode? selectedGameMode)
+    public async Task InitializeAsync()
     {
-        if (selectedGameMode is null)
-            return;
+        await LoadUsers();
+    }
 
-        foreach (var gameMode in Games)
-            gameMode.IsSelected = false;
-
-        selectedGameMode.IsSelected = true;
-        
-        var index = Games.IndexOf(selectedGameMode);
-        if (index >= 0)
-            Games[index] = selectedGameMode;
-
+    private async Task LoadUsers()
+    {
+        var users = await _unitOfWork.Users.GetAllAsync();
+        Users = new ObservableCollection<User>(users);
         SetCanStartNewGame();
     }
+    
+    private void SelectUserChanged() => SetCanStartNewGame();
 
     private async void StartNewGame()
     {
@@ -72,69 +84,19 @@ public class NewGameViewModel : BaseViewModel
         
         using (await _loadingService.Show())
         {
-            var selectedGameMode = Games.SingleOrDefault(x => x.IsSelected);
-            if (selectedGameMode is null) 
+            if (SelectedGameMode is null) 
             {
                 var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
                 await toast.Show();
                 return;
             }
-            _gameService.StartNewGame(selectedGameMode, Users.ToList());
+            _gameService.StartNewGame(SelectedGameMode, SelectedUsers.Cast<User>().ToList());
             await Shell.Current.GoToAsync(nameof(GamePage));
         }
         
     }
 
-    private async void AddNewUser()
-    {
-        var currentPage = Application.Current?.MainPage;
-        if (Users.Select(x => x.Name).Contains(NewUserName))
-        {
-            if (currentPage is not null)
-            {
-                var toast = Toast.Make("Taki użytkownik już istnieje", ToastDuration.Long);
-                await toast.Show();
-            }
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(NewUserName))
-        {
-            if (currentPage is not null)
-            {
-                var toast = Toast.Make("Należy wpisać poprawnego użytkownika", ToastDuration.Long);
-                await toast.Show();
-            }
-            return;
-        }
-        Users.Add(new User{
-            Id = Guid.NewGuid(),
-            Name = NewUserName
-        });
-        NewUserName = string.Empty;
-        SetCanStartNewGame();
-    }
-
     private void SetCanStartNewGame()
-    {
-        CanStartNewGame = Users.Count >= 2 && Games.Any(x => x.IsSelected);
-    }
-
-    private async void RemoveUser(Guid userId)
-    {
-        var currentPage = Application.Current?.MainPage;
-        var userToRemove = Users.SingleOrDefault(x => x.Id == userId);
-        if (userToRemove is not null && currentPage is not null)
-        {
-            var confirmation = await currentPage.DisplayAlert(
-                "Potwierdzenie", 
-                "Czy na pewno chcesz usunąć tego użytkownika?", 
-                "Tak", 
-                "Nie");
-            if(confirmation)
-                Users.Remove(userToRemove);
-        }
-        SetCanStartNewGame();
-    }
+        => CanStartNewGame = SelectedUsers.Count >= 2 && SelectedGameMode is not null;
 
 }

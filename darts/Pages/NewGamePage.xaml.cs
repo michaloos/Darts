@@ -9,9 +9,18 @@ namespace darts;
 
 public partial class NewGamePage : ContentPage
 {
+    private readonly NewGameViewModel _viewModel;
+
     public NewGamePage(NewGameViewModel newGameViewModel)
     {
         InitializeComponent();
+        _viewModel = newGameViewModel;
         BindingContext = newGameViewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.InitializeAsync();
     }
 }
