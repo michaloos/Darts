@@ -117,7 +117,7 @@ public class GameService : IGameService
         UpdateShoots();
     }
 
-    public void AddScore(int score)
+    public void AddScore(int score, int multiplier)
     {
         if (CurrentUserGame is null) return;
         
@@ -126,6 +126,7 @@ public class GameService : IGameService
             Score = score,
             ShootNumber = CurrentUserGame.Shoots.Count + 1,
             Round = CurrentUserGame.Round,
+            Multiplier = multiplier,
         });
         
         UpdateShoots();

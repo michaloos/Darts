@@ -89,7 +89,7 @@ public class GameViewModel : BaseViewModel
 
         var multiplier = X2IsChecked ? 2 : X3IsChecked ? 3 : 1;
         var finalShootScore = multiplier * result;
-        _gameService.AddScore(finalShootScore);
+        _gameService.AddScore(finalShootScore, multiplier);
         
         OnPropertyChanged(nameof(UserGames));
         

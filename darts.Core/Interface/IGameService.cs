@@ -12,5 +12,5 @@ public interface IGameService
     void MoveToTheNextPlayer();
     void MoveToThePreviousPlayer();
     void UndoShoot();
-    void AddScore(int score);
+    void AddScore(int score, int multiplier);
 }
