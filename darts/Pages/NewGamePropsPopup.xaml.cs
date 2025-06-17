@@ -1,23 +1,39 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
+using darts.Core.Model;
 using darts.ViewModel;
 
 namespace darts;
 
 public partial class NewGamePropsPopup : Popup
 {
-    public NewGamePropsPopup(NewGamePropsPopupViewModel viewModel)
+    private readonly NewGamePropsPopupViewModel _viewModel;
+
+    public NewGamePropsPopup(NewGamePropsPopupViewModel viewModel, GameMode gameMode)
     {
         InitializeComponent();
-        BindingContext = viewModel;
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
+        
+        _viewModel.Initialize(gameMode);
+        
+        _viewModel.CloseRequested += OnCloseRequested;
     }
 
-    private void OnCloseClicked(object sender, EventArgs e)
+    private void OnCloseRequested(object? sender, object result)
     {
-        Close();
+        // Zamknij popup i zwróć wynik (konfigurację lub null)
+        Close(result);
+    }
+
+    protected override void OnHandlerChanged()
+    {
+        base.OnHandlerChanged();
+
+        if (Handler == null && _viewModel != null)
+        {
+            // Odpięcie zdarzenia przy zamknięciu popupu
+            _viewModel.CloseRequested -= OnCloseRequested;
+        }
     }
 }

@@ -13,6 +13,7 @@
             <valueConverters:SelectedItemEqualsConverter x:Key="SelectedItemEqualsConverter" />
             <valueConverters:ShootRoundConverter x:Key="ShootRoundConverter"/>
             <valueConverters:IsSelectedItemConverter x:Key="IsSelectedItemConverter"/>
+            <valueConverters:EqualConverter x:Key="EqualConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

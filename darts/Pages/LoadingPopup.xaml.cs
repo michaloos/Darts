@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mopups.Pages;
 
 namespace darts;
@@ -13,5 +8,13 @@ public partial class LoadingPopup : PopupPage
     {
         InitializeComponent();
         LoadingLabel.Text = loadingMessage;
+    }
+
+    public void UpdateMessage(string message)
+    {
+        MainThread.BeginInvokeOnMainThread(() => 
+        {
+            LoadingLabel.Text = message;
+        });
     }
 }

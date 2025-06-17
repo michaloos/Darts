@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using darts.Core.Interface;
 using darts.Core.Model;
+using IPopupService = darts.Core.Interface.IPopupService;
 
 namespace darts.ViewModel;
 
@@ -80,20 +81,29 @@ public class NewGameViewModel : BaseViewModel
 
     private async void StartNewGame()
     {
-        var result = await _popupService.ShowPopupAsync<NewGamePropsPopupViewModel>();
-        
-        using (await _loadingService.Show())
+        if (SelectedGameMode is null) 
         {
-            if (SelectedGameMode is null) 
-            {
-                var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
-                await toast.Show();
-                return;
-            }
+            var toast = Toast.Make("Nie został wybrany żaden tryb gry", ToastDuration.Long);
+            await toast.Show();
+            return;
+        }
+
+        object? result;
+        using (await _loadingService.Show("Konfigurowanie gry"))
+        {
+            result = await _popupService.ShowPopupAsync<NewGamePropsPopupViewModel>(SelectedGameMode);
+        }
+        
+        if (result is null)
+            return;
+
+        var configuration = result as GameModeConfiguration;
+
+        using (await _loadingService.Show("Tworzenie gry"))
+        {
             _gameService.StartNewGame(SelectedGameMode, SelectedUsers.Cast<User>().ToList());
             await Shell.Current.GoToAsync(nameof(GamePage));
         }
-        
     }
 
     private void SetCanStartNewGame()

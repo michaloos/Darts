@@ -10,7 +10,7 @@
         BackgroundColor="DarkSlateGray"
         CornerRadius="10"
         HeightRequest="150"
-        WidthRequest="150">
+        WidthRequest="200">
         <VerticalStackLayout            
             HorizontalOptions="Center"
             VerticalOptions="Center">

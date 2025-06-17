@@ -2,13 +2,138 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModel="clr-namespace:darts.ViewModel"
     x:Class="darts.NewGamePropsPopup"
+    x:DataType="viewModel:NewGamePropsPopupViewModel"
     CanBeDismissedByTappingOutsideOfPopup="False">
 
-    <Border Padding="20" BackgroundColor="DarkGray" HorizontalOptions="Center" VerticalOptions="Center">
-        <StackLayout Spacing="10">
-            <Label Text="To jest mój custom popup 😎" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" />
-            <Button Text="Zamknij" Clicked="OnCloseClicked" />
-        </StackLayout>
+    <Border Padding="20" BackgroundColor="#2c2c2c" StrokeThickness="1" StrokeShape="RoundRectangle 10" Stroke="#3e3e3e"
+            HorizontalOptions="Center" VerticalOptions="Center" MinimumWidthRequest="320" MaximumWidthRequest="500">
+        <ScrollView>
+            <StackLayout Spacing="15" Padding="10">
+                <Label Text="Konfiguracja gry" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="White" />
+                <Label Text="{Binding GameModeName}" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" TextColor="#00b2ff" />
+                <Label Text="{Binding GameModeDescription}" FontSize="14" HorizontalOptions="Start" TextColor="LightGray" />
+
+                <BoxView HeightRequest="1" BackgroundColor="#3e3e3e" Margin="0,5" />
+
+                <!-- Konfiguracja dla trybu 501/301 -->
+                <StackLayout IsVisible="{Binding IsX01Configuration}" Spacing="10">
+                    <Label Text="Konfiguracja X01" FontAttributes="Bold" FontSize="16" TextColor="White" />
+
+                    <Label Text="Punkty startowe:" TextColor="White" />
+                    <HorizontalStackLayout Spacing="10">
+                        <RadioButton Content="301" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                            Converter={StaticResource EqualConverter}, ConverterParameter=301}" />
+                        <RadioButton Content="501" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                            Converter={StaticResource EqualConverter}, ConverterParameter=501}" />
+                        <RadioButton Content="701" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                            Converter={StaticResource EqualConverter}, ConverterParameter=701}" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="Zasady:" TextColor="White" />
+                    
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding X01DoubleOut}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Double Out (zakończenie na podwójnym)" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding X01DoubleIn}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Double In (rozpoczęcie podwójnym)" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding X01MasterOut}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Master Out (zakończenie podwójnym lub potrójnym)" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <Label Text="Liczba legów do wygrania:" TextColor="White" />
+                    <Slider Minimum="1" Maximum="9" Value="{Binding X01NumberOfLegs}" />
+                    <Label Text="{Binding X01NumberOfLegs, StringFormat='Liczba legów: {0}'}"
+                           HorizontalOptions="Center" TextColor="White" />
+                </StackLayout>
+
+                <!-- Konfiguracja dla trybu Cricket -->
+                <StackLayout IsVisible="{Binding IsCricketConfiguration}" Spacing="10">
+                    <Label Text="Konfiguracja Cricket" FontAttributes="Bold" FontSize="16" TextColor="White" />
+
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding CricketUseCutThroatRules}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Cut Throat (punkty dodawane przeciwnikom)" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+                    
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding CricketEnableScoring}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Umożliw zdobywanie punktów" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+
+                </StackLayout>
+
+                <!-- Konfiguracja dla trybu Gotcha -->
+                <StackLayout IsVisible="{Binding IsGotchaConfiguration}" Spacing="10">
+                    <Label Text="Konfiguracja Gotcha" FontAttributes="Bold" FontSize="16" TextColor="White" />
+
+                    <Label Text="Cel punktowy:" TextColor="White" />
+                    <Entry Text="{Binding GotchaTargetScore}" Keyboard="Numeric" TextColor="White" BackgroundColor="#3e3e3e" />
+
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding GotchaBustRule}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Bust Rule (przekroczenie cofa do poprzedniego wyniku)" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox IsChecked="{Binding GotchaCanAttackOthers}" Color="#00b2ff" VerticalOptions="Center"/>
+                        <Label Text="Można atakować innych graczy" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+                </StackLayout>
+
+                <!-- Tutaj można dodać konfigurację dla innych trybów gry... -->
+                <!-- Dodatkowy komunikat, jeśli nie zaimplementowano jeszcze konfiguracji dla danego trybu -->
+                <StackLayout IsVisible="{Binding IsAroundTheClockConfiguration}">
+                    <Label Text="Konfiguracja Around the Clock" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsShanghaiConfiguration}">
+                    <Label Text="Konfiguracja Shanghai" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsKillerConfiguration}">
+                    <Label Text="Konfiguracja Killer" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsHighScoreConfiguration}">
+                    <Label Text="Konfiguracja High Score" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsLegsConfiguration}">
+                    <Label Text="Konfiguracja Legs" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsHalveItConfiguration}">
+                    <Label Text="Konfiguracja Halve-It" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <StackLayout IsVisible="{Binding IsBob27Configuration}">
+                    <Label Text="Konfiguracja Bob's 27" FontAttributes="Bold" FontSize="16" TextColor="White" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                </StackLayout>
+
+                <BoxView HeightRequest="1" BackgroundColor="#3e3e3e" Margin="0,5" />
+
+                <!-- Przyciski akcji -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <Button Text="Resetuj" Command="{Binding ResetToDefaultsCommand}" BackgroundColor="#3e3e3e" TextColor="White" />
+                    <Button Text="Anuluj" Command="{Binding CancelCommand}" BackgroundColor="#3e3e3e" TextColor="White" />
+                    <Button Text="Zapisz" Command="{Binding SaveCommand}" BackgroundColor="#00b2ff" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+        </ScrollView>
     </Border>
 </toolkit:Popup>
