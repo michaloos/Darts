@@ -96,12 +96,10 @@ public class NewGameViewModel : BaseViewModel
         
         if (result is null)
             return;
-
-        var configuration = result as GameModeConfiguration;
-
+        
         using (await _loadingService.Show("Tworzenie gry"))
         {
-            _gameService.StartNewGame(SelectedGameMode, SelectedUsers.Cast<User>().ToList());
+            _gameService.StartNewGame(SelectedGameMode, SelectedUsers.Cast<User>().ToList(), (result as GameModeConfiguration)!);
             await Shell.Current.GoToAsync(nameof(GamePage));
         }
     }

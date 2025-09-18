@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using darts.Core.Interface;
 using darts.Core.Model;
+using darts.Core.Mechanics;
 
 namespace darts.Services;
 
@@ -10,8 +11,9 @@ public class GameService : IGameService
     public UserGame? CurrentUserGame { get; set; }
     public required GameMode GameMode { get; set; }
     private bool _isNewRoundStarting = false;
+    private IGameMechanics _mechanics = new DefaultMechanics();
 
-    public void StartNewGame(GameMode gameMode, List<User> users)
+    public void StartNewGame(GameMode gameMode, List<User> users, GameModeConfiguration configuration)
     {
         GameUsers = [];
         GameMode = gameMode;
@@ -30,6 +32,9 @@ public class GameService : IGameService
         });
         CurrentUserGame =  GameUsers.First();
         CurrentUserGame!.CurrentPlayer = true;
+        
+        _mechanics = GameMode.CreateMechanics?.Invoke(configuration) ?? new DefaultMechanics();
+        _mechanics.Initialize(GameUsers, configuration);
     }
 
     public void EndGame()
@@ -62,6 +67,7 @@ public class GameService : IGameService
         CurrentUserGame.OnPropertyChanged(nameof(UserGame.VisibleShoots));
         CurrentUserGame.Round++;
     }
+    
     private void UpdatePositions()
     {
         if (GameUsers.All(x => x.CurrentScore == 0)) {
@@ -96,8 +102,8 @@ public class GameService : IGameService
         UpdatePositions();
         
     }
-    
-    private void RemoveLastScore()
+
+    public void UndoShoot()
     {
         if (CurrentUserGame is null) throw new InvalidOperationException("No player found");
 
@@ -105,15 +111,7 @@ public class GameService : IGameService
         if (GameUsers.ElementAt(previousIndex).Shoots.Count % 3 == 0 && GameUsers.ElementAt(previousIndex).Shoots.Any())
             MoveToThePreviousPlayer();
         
-        if (CurrentUserGame.Shoots.Any())
-            CurrentUserGame.Shoots.RemoveAt(CurrentUserGame.Shoots.Count - 1);
-        UpdateShoots();
-
-    }
-
-    public void UndoShoot()
-    {
-        RemoveLastScore();
+        _mechanics.OnCancelThrow(CurrentUserGame);
         UpdateShoots();
     }
 
@@ -121,17 +119,18 @@ public class GameService : IGameService
     {
         if (CurrentUserGame is null) return;
         
-        CurrentUserGame.Shoots.Add(new UserGameShoot
-        {
-            Score = score,
-            ShootNumber = CurrentUserGame.Shoots.Count + 1,
-            Round = CurrentUserGame.Round,
-            Multiplier = multiplier,
-        });
-        
+        _mechanics.OnThrow(CurrentUserGame, score, multiplier);
         UpdateShoots();
-
-        if (CurrentUserGame.Shoots.Count % 3 == 0)
+        
+        if(_mechanics.CheckForWin(CurrentUserGame))
+        {
+            MoveToTheNextPlayer();
+            //todo start new round gam,e
+            return;
+        }
+        
+        var roundEntries = CurrentUserGame.Shoots.Count(s => s.Round == CurrentUserGame.Round);
+        if (roundEntries == 3)
             MoveToTheNextPlayer();
     }
 
@@ -139,7 +138,7 @@ public class GameService : IGameService
     {
         var updatedShoots = new ObservableCollection<UserGameShoot>(CurrentUserGame!.Shoots);
         CurrentUserGame.Shoots = updatedShoots;
-        CurrentUserGame.CurrentScore = CurrentUserGame.Shoots.Sum(x => x.Score);
+        _mechanics.Recalculate(CurrentUserGame);
         
         CurrentUserGame.OnPropertyChanged(nameof(CurrentUserGame.VisibleShoots));
     }

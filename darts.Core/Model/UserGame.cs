@@ -90,7 +90,8 @@ public class UserGame : INotifyPropertyChanged
                     Score = null,
                     Round = currentRound,
                     ShootNumber = Shoots.Count + 1,
-                    Multiplier = 0
+                    Multiplier = 0,
+                    ApplyToScore = false,
                 });
             }
 

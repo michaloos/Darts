@@ -88,8 +88,7 @@ public class GameViewModel : BaseViewModel
         if (!TryParse(score, out var result)) return;
 
         var multiplier = X2IsChecked ? 2 : X3IsChecked ? 3 : 1;
-        var finalShootScore = multiplier * result;
-        _gameService.AddScore(finalShootScore, multiplier);
+        _gameService.AddScore(result, multiplier);
         
         OnPropertyChanged(nameof(UserGames));
         

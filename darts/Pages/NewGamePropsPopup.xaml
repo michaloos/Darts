@@ -87,12 +87,10 @@
                         <Label Text="Można atakować innych graczy" TextColor="White" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalOptions="FillAndExpand"/>
                     </HorizontalStackLayout>
                 </StackLayout>
-
-                <!-- Tutaj można dodać konfigurację dla innych trybów gry... -->
-                <!-- Dodatkowy komunikat, jeśli nie zaimplementowano jeszcze konfiguracji dla danego trybu -->
+               
                 <StackLayout IsVisible="{Binding IsAroundTheClockConfiguration}">
                     <Label Text="Konfiguracja Around the Clock" FontAttributes="Bold" FontSize="16" TextColor="White" />
-                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" />
+                    <Label Text="Używane są domyślne ustawienia dla tego trybu gry." TextColor="LightGray" /> 
                 </StackLayout>
 
                 <StackLayout IsVisible="{Binding IsShanghaiConfiguration}">

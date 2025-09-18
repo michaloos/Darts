@@ -7,7 +7,7 @@ public interface IGameService
 {
     ObservableCollection<UserGame> GameUsers { get; set; }
     UserGame? CurrentUserGame { get; set; }
-    void StartNewGame(GameMode gameMode, List<User> users);
+    void StartNewGame(GameMode gameMode, List<User> users, GameModeConfiguration configuration);
     void EndGame();
     void MoveToTheNextPlayer();
     void MoveToThePreviousPlayer();

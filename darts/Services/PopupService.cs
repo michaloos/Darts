@@ -18,7 +18,7 @@ public class PopupService : IPopupService
     /// <summary>
     /// Wyświetla popup z określonym ViewModel i zwraca wynik
     /// </summary>
-    public async Task<object> ShowPopupAsync<TViewModel>(object parameter = null) where TViewModel : class
+    public async Task<object?> ShowPopupAsync<TViewModel>(object? parameter = null) where TViewModel : class
     {
         // Utwórz instancję ViewModel przez kontener DI
         var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
