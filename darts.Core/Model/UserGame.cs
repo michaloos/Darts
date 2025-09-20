@@ -21,6 +21,14 @@ public class UserGame : INotifyPropertyChanged
         set { _position = value; OnPropertyChanged(); }
     }
     
+    private int _setWins;
+
+    public int SetWins
+    {
+        get => _setWins;
+        set { _setWins = value; OnPropertyChanged(); }
+    }
+    
     public ObservableCollection<UserGameShoot> Shoots
     {
         get => _shoots;
@@ -74,13 +82,22 @@ public class UserGame : INotifyPropertyChanged
         set { _round = value; OnPropertyChanged(); OnPropertyChanged(nameof(VisibleShoots)); }
     }
     
+    private int _currentSetNumber;
+    public int CurrentSetNumber
+    {
+        get => _currentSetNumber;
+        set { _currentSetNumber = value; OnPropertyChanged(); OnPropertyChanged(nameof(VisibleShoots)); }
+    }
+
     public ObservableCollection<UserGameShoot> VisibleShoots
     {
         get
         {
             var currentRound = Round;
+            var currentSet = CurrentSetNumber;
+
             var currentShoots = Shoots
-                .Where(s => s.Round == currentRound)
+                .Where(s => s.Round == currentRound && s.SetNumber == currentSet)
                 .ToList();
 
             while (currentShoots.Count < 3)
@@ -89,9 +106,10 @@ public class UserGame : INotifyPropertyChanged
                 {
                     Score = null,
                     Round = currentRound,
-                    ShootNumber = Shoots.Count + 1,
+                    ShootNumber = currentShoots.Count + 1,
                     Multiplier = 0,
                     ApplyToScore = false,
+                    SetNumber = currentSet,
                 });
             }
 

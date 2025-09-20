@@ -28,6 +28,7 @@ public class GameService : IGameService
                 CurrentScore = null,
                 CurrentPlayer = false,
                 Round = 1,
+                SetWins = 0,
             });
         });
         CurrentUserGame =  GameUsers.First();
@@ -124,13 +125,23 @@ public class GameService : IGameService
         
         if(_mechanics.CheckForWin(CurrentUserGame))
         {
+            _mechanics.StartNewSet(GameUsers, CurrentUserGame);
             MoveToTheNextPlayer();
             //todo start new round gam,e
             return;
         }
         
-        var roundEntries = CurrentUserGame.Shoots.Count(s => s.Round == CurrentUserGame.Round);
-        if (roundEntries == 3)
+        var currentRoundShoots = CurrentUserGame.Shoots
+            .Where(s => s.Round == CurrentUserGame.Round && s.SetNumber == _mechanics.SetNumber)
+            .ToList();
+        
+        if (currentRoundShoots.Any() && !currentRoundShoots.Last().ApplyToScore)
+        {
+            MoveToTheNextPlayer();
+            return;
+        }
+        
+        if (currentRoundShoots.Count == 3)
             MoveToTheNextPlayer();
     }
 

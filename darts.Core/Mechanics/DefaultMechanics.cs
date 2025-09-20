@@ -7,6 +7,8 @@ namespace darts.Core.Mechanics
 {
     public class DefaultMechanics : IGameMechanics
     {
+        public int SetNumber { get; set; }
+
         public void Initialize(IList<UserGame> players, GameModeConfiguration configuration)
         {
             foreach (var p in players)
@@ -37,6 +39,11 @@ namespace darts.Core.Mechanics
         public bool CheckForWin(UserGame player)
         {
             return false;
+        }
+        
+        public void StartNewSet(IList<UserGame> players, UserGame currentWinner)
+        {
+            
         }
     }
 }
