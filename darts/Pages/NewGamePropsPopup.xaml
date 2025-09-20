@@ -23,11 +23,11 @@
 
                     <Label Text="Punkty startowe:" TextColor="White" />
                     <HorizontalStackLayout Spacing="10">
-                        <RadioButton Content="301" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                        <RadioButton Content="301" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, Mode=TwoWay,
                             Converter={StaticResource EqualConverter}, ConverterParameter=301}" />
-                        <RadioButton Content="501" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                        <RadioButton Content="501" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, Mode=TwoWay,
                             Converter={StaticResource EqualConverter}, ConverterParameter=501}" />
-                        <RadioButton Content="701" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, 
+                        <RadioButton Content="701" GroupName="X01StartingPoints" IsChecked="{Binding X01StartingScore, Mode=TwoWay,
                             Converter={StaticResource EqualConverter}, ConverterParameter=701}" />
                     </HorizontalStackLayout>
 
