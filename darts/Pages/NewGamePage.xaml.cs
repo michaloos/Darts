@@ -23,4 +23,12 @@ public partial class NewGamePage : ContentPage
         base.OnAppearing();
         await _viewModel.InitializeAsync();
     }
+
+    private void GamesCollectionView_OnSelectionChanged(object sender, Microsoft.Maui.Controls.SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection?.FirstOrDefault() is darts.Core.Model.GameMode gm && gm.Disabled)
+        {
+            ((Microsoft.Maui.Controls.CollectionView)sender).SelectedItem = null;
+        }
+    }
 }

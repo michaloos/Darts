@@ -30,6 +30,7 @@ public class NewGameViewModel : BaseViewModel
     private readonly IUnitOfWork _unitOfWork;
     public ICommand StartNewGameCommand { get; set; }
     public ICommand SelectUserCommand { get; set; }
+    public ICommand GamesSelectionChangedCommand { get; set; }
 
     public bool CanStartNewGame
     {
@@ -38,19 +39,30 @@ public class NewGameViewModel : BaseViewModel
     }
     public ObservableCollection<GameMode> Games { get; set; }
     private GameMode? _selectedGameMode;
+    private GameMode? _lastValidGameMode;
 
     public GameMode? SelectedGameMode
     {
         get => _selectedGameMode;
         set
         {
+            // Nie pozwalaj wybrać Disabled – przywróć poprzednią poprawną selekcję
+            if (value is not null && value.Disabled)
+            {
+                OnPropertyChanged(nameof(SelectedGameMode));
+                SetCanStartNewGame();
+                return;
+            }
+
             SetProperty(ref _selectedGameMode, value);
+            if (value is not null && !value.Disabled)
+                _lastValidGameMode = value;
             SetCanStartNewGame();
         }
     }
 
     private bool _canStartNewGame;
-    
+
     public NewGameViewModel(IGameService gameService,
         ILoadingService loadingService, IPopupService popupService,
         IUnitOfWork unitOfWork)
@@ -63,6 +75,7 @@ public class NewGameViewModel : BaseViewModel
         Games = GameModes.Modes;
         StartNewGameCommand = new Command(StartNewGame);
         SelectUserCommand = new Command(SelectUserChanged);
+        GamesSelectionChangedCommand = new Command<object>(OnGamesSelectionChanged);
     }
 
     public async Task InitializeAsync()
@@ -76,7 +89,7 @@ public class NewGameViewModel : BaseViewModel
         Users = new ObservableCollection<User>(users);
         SetCanStartNewGame();
     }
-    
+
     private void SelectUserChanged() => SetCanStartNewGame();
 
     private async void StartNewGame()
@@ -93,10 +106,10 @@ public class NewGameViewModel : BaseViewModel
         {
             result = await _popupService.ShowPopupAsync<NewGamePropsPopupViewModel>(SelectedGameMode);
         }
-        
+
         if (result is null)
             return;
-        
+
         using (await _loadingService.Show("Tworzenie gry"))
         {
             _gameService.StartNewGame(SelectedGameMode, SelectedUsers.Cast<User>().ToList(), (result as GameModeConfiguration)!);
@@ -107,4 +120,20 @@ public class NewGameViewModel : BaseViewModel
     private void SetCanStartNewGame()
         => CanStartNewGame = SelectedUsers.Count >= 2 && SelectedGameMode is not null;
 
+    private void OnGamesSelectionChanged(object parameter)
+    {
+        // Parametr to SelectedItem z CollectionView
+        if (parameter is GameMode gm)
+        {
+            if (gm.Disabled)
+            {
+                // Anuluj i przywróć poprzednią poprawną selekcję
+                SelectedGameMode = _lastValidGameMode;
+            }
+            else
+            {
+                SelectedGameMode = gm;
+            }
+        }
+    }
 }

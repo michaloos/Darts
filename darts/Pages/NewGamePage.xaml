@@ -71,7 +71,8 @@
                             </VisualStateManager.VisualStateGroups>
 
                             <HorizontalStackLayout>
-                                <Label Text="{Binding Name}"
+                                <Label x:Name="GameNameLabel"
+                                       Text="{Binding Name}"
                                        FontSize="14"
                                        FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
@@ -97,12 +98,14 @@
             
             <Label Grid.Row="0" Grid.Column="0"  Text="Gry" FontSize="24"/>
             
-            <CollectionView 
+            <CollectionView x:Name="GamesCollectionView"
                 Grid.Row="1" 
                 Grid.Column="0" 
                 ItemsSource="{Binding Games}"
                 SelectionMode="Single"
-                SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}">
+                SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}"
+                SelectionChangedCommand="{Binding GamesSelectionChangedCommand}"
+                SelectionChangedCommandParameter="{Binding Source={x:Reference GamesCollectionView}, Path=SelectedItem}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model1:GameMode">
                         <Border x:Name="ItemGameBorder"
@@ -127,14 +130,39 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <HorizontalStackLayout>
-                                <Label Text="{Binding Name}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                       VerticalOptions="Center"
-                                       HorizontalOptions="Start" />
-                            </HorizontalStackLayout>
+                            
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding Disabled}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="InputTransparent" Value="True" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EDEDED, Dark=#2F2F2F}" />
+                                    <Setter Property="Opacity" Value="0.7" />
+                                </DataTrigger>
+                            </Border.Triggers>
+
+                            <Grid>
+                                <HorizontalStackLayout ZIndex="0" Spacing="8">
+                                    <Label
+                                           Text="{Binding Name}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Start">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Disabled}" Value="True">
+                                                <Setter Property="TextColor" Value="{AppThemeBinding Light=#5F5F5F, Dark=#D0D0D0}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    
+                                    <Label
+                                        Text="🔒"
+                                        IsVisible="{Binding Disabled}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Start" />
+                                </HorizontalStackLayout>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
