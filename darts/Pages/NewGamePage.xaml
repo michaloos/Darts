@@ -6,177 +6,193 @@
              xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
              x:DataType="viewModel:NewGameViewModel"
              x:Class="darts.NewGamePage">
-    
-    <Grid VerticalOptions="FillAndExpand">
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.47*"/>
-            <RowDefinition Height="0.47*"/>
-            <RowDefinition Height="0.06*"/>
-        </Grid.RowDefinitions>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- lista graczy -->
-        <Grid Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" Padding="8">
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.85*"/>
-            </Grid.RowDefinitions>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Gracze" FontSize="24"/>
-            
-            <CollectionView 
-                Grid.Row="1" 
-                Grid.Column="0" 
-                Grid.ColumnSpan="3" 
-                ItemsSource="{Binding Users}"
-                SelectionMode="Multiple"
-                SelectedItems="{Binding SelectedUsers, Mode=TwoWay}"
-                SelectionChangedCommand="{Binding SelectUserCommand}"
-                BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="*,*,Auto" RowSpacing="12" Padding="12">
+
+        <!-- Sekcja: Gracze (wiersz 1) -->
+        <Grid Grid.Row="0" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}" Padding="8">
+            <Label Grid.Row="0"
+                   Text="Gracze"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   Margin="4,0,0,8"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Users}"
+                            SelectionMode="Multiple"
+                            SelectedItems="{Binding SelectedUsers, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding SelectUserCommand}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model1:User">
-                        <Border x:Name="ItemBorder"
-                            Margin="6"
-                            StrokeShape="RoundRectangle 8"
-                            Padding="12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
-        
+                        <Border Margin="6"
+                                Padding="10,8"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#202020}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="CommonStates">
                                     <VisualState Name="Normal">
                                         <VisualState.Setters>
-                                            <Setter TargetName="ItemBorder" Property="BackgroundColor" 
-                                                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-                                            <Setter TargetName="ItemBorder" Property="Scale" Value="1.0" />
+                                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#202020}" />
+                                            <Setter Property="Stroke" Value="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}" />
+                                            <Setter Property="Scale" Value="1.0" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState Name="Selected">
                                         <VisualState.Setters>
-                                            <Setter TargetName="ItemBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                            <Setter TargetName="ItemBorder" Property="Scale" Value="1.03" />
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                            <Setter Property="Scale" Value="1.02" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
 
-                            <HorizontalStackLayout>
-                                <Label x:Name="GameNameLabel"
-                                       Text="{Binding Name}"
-                                       FontSize="14"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                       VerticalOptions="Center"
-                                       HorizontalOptions="Start" />
-                            </HorizontalStackLayout>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
-        
-        <!-- wybór trybu gry -->
-        <Grid Grid.Row="1" Grid.Column="0" VerticalOptions="FillAndExpand" Padding="8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.85*"/>
-            </Grid.RowDefinitions>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Label Grid.Row="0" Grid.Column="0"  Text="Gry" FontSize="24"/>
-            
-            <CollectionView x:Name="GamesCollectionView"
-                Grid.Row="1" 
-                Grid.Column="0" 
-                ItemsSource="{Binding Games}"
-                SelectionMode="Single"
-                SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}"
-                SelectionChangedCommand="{Binding GamesSelectionChangedCommand}"
-                SelectionChangedCommandParameter="{Binding Source={x:Reference GamesCollectionView}, Path=SelectedItem}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model1:GameMode">
-                        <Border x:Name="ItemGameBorder"
-                                Margin="6"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="12"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="CommonStates">
-                                    <VisualState Name="Normal">
-                                        <VisualState.Setters>
-                                            <Setter TargetName="ItemGameBorder" Property="BackgroundColor" 
-                                                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-                                            <Setter TargetName="ItemGameBorder" Property="Scale" Value="1.0" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState Name="Selected">
-                                        <VisualState.Setters>
-                                            <Setter TargetName="ItemGameBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                            <Setter TargetName="ItemGameBorder" Property="Scale" Value="1.03" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            
-                            <Border.Triggers>
-                                <DataTrigger TargetType="Border" Binding="{Binding Disabled}" Value="True">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                    <Setter Property="InputTransparent" Value="True" />
-                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EDEDED, Dark=#2F2F2F}" />
-                                    <Setter Property="Opacity" Value="0.7" />
-                                </DataTrigger>
-                            </Border.Triggers>
-
-                            <Grid>
-                                <HorizontalStackLayout ZIndex="0" Spacing="8">
-                                    <Label
-                                           Text="{Binding Name}"
-                                           FontSize="14"
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding Name}"
                                            FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                           VerticalOptions="Center"
-                                           HorizontalOptions="Start">
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding Disabled}" Value="True">
-                                                <Setter Property="TextColor" Value="{AppThemeBinding Light=#5F5F5F, Dark=#D0D0D0}" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                    
-                                    <Label
-                                        Text="🔒"
-                                        IsVisible="{Binding Disabled}"
-                                        VerticalOptions="Center"
-                                        HorizontalOptions="Start" />
-                                </HorizontalStackLayout>
+                                           FontSize="15"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                </VerticalStackLayout>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
-        
-        <Button 
-            Grid.Row="2" 
-            Grid.Column="0" 
-            Padding="8"
-            HorizontalOptions="Center"
-            Text="Rozpocznij grę"
-            IsEnabled="{Binding CanStartNewGame}"
-            Command="{Binding StartNewGameCommand}"/>
-        
+
+        <!-- Sekcja: Tryby gry (wiersz 2) -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}" Padding="8">
+            <Label Grid.Row="0"
+                   Text="Tryby gry"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   Margin="4,0,0,8"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+
+            <CollectionView x:Name="GamesCollectionView"
+                            Grid.Row="1"
+                            ItemsSource="{Binding Games}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedGameMode, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding GamesSelectionChangedCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={x:Reference GamesCollectionView}, Path=SelectedItem}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model1:GameMode">
+                        <Grid>
+                            <Border Margin="6"
+                                    Padding="12"
+                                    StrokeThickness="1"
+                                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}"
+                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#202020}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#202020}" />
+                                                <Setter Property="Stroke" Value="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}" />
+                                                <Setter Property="Scale" Value="1.0" />
+                                                <Setter Property="Opacity" Value="1" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Focused">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#202020}" />
+                                                <Setter Property="Stroke" Value="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}" />
+                                                <Setter Property="Scale" Value="1.0" />
+                                                <Setter Property="Opacity" Value="1" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="PointerOver">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#202020}" />
+                                                <Setter Property="Stroke" Value="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3A}" />
+                                                <Setter Property="Scale" Value="1.0" />
+                                                <Setter Property="Opacity" Value="1" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                                <Setter Property="Scale" Value="1.02" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Disabled}" Value="True">
+                                                <Setter Property="TextColor" Value="{AppThemeBinding Light=#7A7A7A, Dark=#CDCDCD}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{AppThemeBinding Light=#FFEFEF, Dark=#3A2A2A}"
+                                            Padding="8,2"
+                                            IsVisible="{Binding Disabled}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8" />
+                                        </Border.StrokeShape>
+                                        <Label Text="Zablokowane"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#B94A48, Dark=#FF9E98}" />
+                                    </Border>
+
+                                    <Label Grid.Row="1" Grid.Column="0"
+                                           Text="{Binding Description}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#6E6E6E, Dark=#BEBEBE}"
+                                           LineBreakMode="WordWrap"
+                                           MaxLines="2"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Overlay Disabled -->
+                            <Grid IsVisible="{Binding Disabled}"
+                                  InputTransparent="True"
+                                  BackgroundColor="{AppThemeBinding Light=#80FFFFFF, Dark=#66000000}"
+                                  Margin="6" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- CTA (wiersz 3) -->
+        <Button Grid.Row="2"
+                Text="Rozpocznij grę"
+                FontAttributes="Bold"
+                CornerRadius="10"
+                Padding="12,10"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding CanStartNewGame}"
+                Command="{Binding StartNewGameCommand}" />
     </Grid>
 </ContentPage>

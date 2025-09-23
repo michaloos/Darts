@@ -14,6 +14,7 @@
             <valueConverters:ShootRoundConverter x:Key="ShootRoundConverter"/>
             <valueConverters:IsSelectedItemConverter x:Key="IsSelectedItemConverter"/>
             <valueConverters:EqualConverter x:Key="EqualConverter"/>
+            <valueConverters:NullToZeroConverter x:Key="NullToZeroConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -16,73 +16,186 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <CollectionView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding UserGames}">
+        <CollectionView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding UserGames}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model1:UserGame">
-                    <Frame HeightRequest="100" Margin="4" Padding="4" CornerRadius="4" BorderColor="SlateGray" HasShadow="True">
-                        <Frame.Triggers>
-                            <DataTrigger TargetType="Frame" Binding="{Binding CurrentPlayer}" Value="True">
-                                <Setter Property="BackgroundColor" Value="DarkGrey"/>
-                            </DataTrigger>
-                        </Frame.Triggers>
-                        <Grid VerticalOptions="FillAndExpand" RowSpacing="4">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.25*"/>
-                                <RowDefinition Height="0.75*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <!-- <ColumnDefinition Width="0.25*"/> -->
-                                <ColumnDefinition Width="0.75*"/>
-                                <ColumnDefinition Width="0.25*"/>
-                            </Grid.ColumnDefinitions>
+                    <Grid Margin="8">
+                        <Frame CornerRadius="12"
+                               Padding="0"
+                               HasShadow="True"
+                               BackgroundColor="#1F1F1F"
+                               BorderColor="#333333">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="44" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" Text="{Binding User.Name}" FontAttributes="Bold"/>
-                            <!-- <Border Grid.Row="1" Grid.Column="0" StrokeShape="RoundRectangle 8,8,8,8" StrokeThickness="1" Stroke="white"> -->
-                            <!--     <Label Text="{Binding Position, TargetNullValue='#'}" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="24"/> -->
-                            <!-- </Border> -->
-                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" StrokeShape="RoundRectangle 4,4,4,4" StrokeThickness="1" Stroke="white">
-                                <Label Text="{Binding CurrentScore, TargetNullValue='#'}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontAttributes="Bold" FontSize="24"/>
-                            </Border>
-                            
-                            <CollectionView Grid.Row="1" Grid.Column="0"
-                                            ItemsSource="{Binding VisibleShoots}"
-                                            ItemsLayout="HorizontalList"
-                                            HorizontalOptions="Center"
-                                            SelectionMode="None">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate x:DataType="model1:UserGameShoot">
-                                        <Border StrokeShape="RoundRectangle 4,4,4,4" StrokeThickness="1" Stroke="white" HeightRequest="50" WidthRequest="50" Margin="2">
-                                            <Border.Triggers>
-                                                <!-- Kolory gdy rzut punktuje -->
-                                                <DataTrigger TargetType="Border" Binding="{Binding ApplyToScore}" Value="True">
-                                                    <Setter Property="Stroke" Value="LawnGreen"/>
-                                                    <Setter Property="BackgroundColor" Value="#1A90EE90"/>
-                                                </DataTrigger>
-                                                <!-- Kolory gdy rzut NIE punktuje (bust/null) -->
-                                                <DataTrigger TargetType="Border" Binding="{Binding ApplyToScore}" Value="False">
-                                                    <Setter Property="Stroke" Value="Tomato"/>
-                                                    <Setter Property="BackgroundColor" Value="#1AFF6347"/>
-                                                </DataTrigger>
-                                            </Border.Triggers>
-                                            <Label HorizontalTextAlignment="Center"
-                                                   VerticalTextAlignment="Center">
-                                                <Label.Triggers>
-                                                    <!-- Tekst dla punktujących -->
-                                                    <DataTrigger TargetType="Label" Binding="{Binding ApplyToScore}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding Score}"/>
-                                                    </DataTrigger>
-                                                    <!-- Tekst dla niepunktujących: 'X' dla null, a jeśli był rzut z wynikiem ale nie liczony, pokaż np. '(12)' -->
-                                                    <DataTrigger TargetType="Label" Binding="{Binding ApplyToScore}" Value="False">
-                                                        <Setter Property="Text" Value="{Binding Score, TargetNullValue=X}"/>
-                                                    </DataTrigger>
-                                                </Label.Triggers>
-                                            </Label>
+                                <!-- Pasek nagłówka z nazwą i licznikami -->
+                                <Grid Grid.Row="0"
+                                      Padding="12,8"
+                                      BackgroundColor="#242424">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Nazwa gracza -->
+                                    <HorizontalStackLayout Spacing="8" Grid.Column="0" VerticalOptions="Center">
+                                        <Image Source="person.png" HeightRequest="18" WidthRequest="18" Opacity="0.8" />
+                                        <Label Text="{Binding User.Name}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="White" />
+                                    </HorizontalStackLayout>
+
+                                    <!-- Liczniki setów/legów -->
+                                    <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                                        <Border Stroke="#3E8EED" StrokeThickness="1" StrokeShape="RoundRectangle 6" BackgroundColor="#223A63" Padding="8,2">
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="SET"
+                                                       TextColor="#91C4FF"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold" />
+                                                <Label Text="{Binding SetWins}"
+                                                       TextColor="White"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold" />
+                                            </HorizontalStackLayout>
                                         </Border>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </Grid>
-                    </Frame>
+
+                                        <!-- Placeholder na wygrane legi: jeśli dodasz właściwość LegsWon w modelu, podmień binding -->
+                                        <Border Stroke="#7BC67B" StrokeThickness="1" StrokeShape="RoundRectangle 6" BackgroundColor="#234A23" Padding="8,2" IsVisible="True">
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="LEG"
+                                                       TextColor="#C8F0C8"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold" />
+                                                <Label Text="{Binding Position, Converter={StaticResource NullToZeroConverter}}"
+                                                       TextColor="White"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </Grid>
+
+                                <!-- Ciało karty -->
+                                <Grid Grid.Row="1" Padding="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="120" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Ostatnie 3 rzuty -->
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="6">
+                                        <Label Text="Rzuty" TextColor="#AAAAAA" FontSize="12" />
+                                        <CollectionView ItemsSource="{Binding VisibleShoots}"
+                                                        ItemsLayout="HorizontalList"
+                                                        SelectionMode="None">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model1:UserGameShoot">
+                                                    <Border StrokeShape="RoundRectangle 6"
+                                                            StrokeThickness="1"
+                                                            Stroke="#3A3A3A"
+                                                            BackgroundColor="#2A2A2A"
+                                                            HeightRequest="44"
+                                                            WidthRequest="56"
+                                                            Margin="4"
+                                                            HorizontalOptions="Center"
+                                                            VerticalOptions="Center">
+                                                        <Border.Triggers>
+                                                            <DataTrigger TargetType="Border" Binding="{Binding ApplyToScore}" Value="True">
+                                                                <Setter Property="Stroke" Value="#55D26A"/>
+                                                                <Setter Property="BackgroundColor" Value="#1F2F24"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Border" Binding="{Binding ApplyToScore}" Value="False">
+                                                                <Setter Property="Stroke" Value="#FF7766"/>
+                                                                <Setter Property="BackgroundColor" Value="#2A2020"/>
+                                                            </DataTrigger>
+                                                        </Border.Triggers>
+                                                        <Label HorizontalTextAlignment="Center"
+                                                               VerticalTextAlignment="Center"
+                                                               TextColor="White"
+                                                               FontAttributes="Bold">
+                                                            <Label.Triggers>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding ApplyToScore}" Value="True">
+                                                                    <Setter Property="Text" Value="{Binding Score}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding ApplyToScore}" Value="False">
+                                                                    <Setter Property="Text" Value="{Binding Score, TargetNullValue=X}" />
+                                                                </DataTrigger>
+                                                            </Label.Triggers>
+                                                        </Label>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </VerticalStackLayout>
+
+                                    <!-- Duży wynik -->
+                                    <Border Grid.RowSpan="2"
+                                            Grid.Column="1"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="1"
+                                            Stroke="#3A3A3A"
+                                            BackgroundColor="#202020"
+                                            Padding="8"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Center">
+                                        <VerticalStackLayout Spacing="4"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="Wynik"
+                                                   TextColor="#AAAAAA"
+                                                   FontSize="12"
+                                                   HorizontalTextAlignment="Center" />
+                                            <Label Text="{Binding CurrentScore, TargetNullValue=#}"
+                                                   TextColor="White"
+                                                   FontSize="28"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- Pasek statusu/aktywnego gracza -->
+                                    <Grid Grid.Row="1" Grid.Column="0" VerticalOptions="End">
+                                        <Border StrokeShape="RoundRectangle 6"
+                                                StrokeThickness="0"
+                                                BackgroundColor="#2A2A2A"
+                                                Padding="10,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Source="dart.png" HeightRequest="16" WidthRequest="16" Opacity="0.85" />
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Round, StringFormat='Runda {0}'}"
+                                                       TextColor="#DDDDDD" />
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <!-- Delikatne podświetlenie aktywnego gracza -->
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding CurrentPlayer}" Value="True">
+                                    <Setter Property="BorderColor" Value="#3E8EED" />
+                                    <Setter Property="BackgroundColor" Value="#1A2536" />
+                                </DataTrigger>
+                            </Frame.Triggers>
+                        </Frame>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
