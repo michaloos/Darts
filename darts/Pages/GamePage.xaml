@@ -21,8 +21,9 @@
                 <DataTemplate x:DataType="model1:UserGame">
                     <Grid Margin="8">
                         <Frame CornerRadius="12"
-                               Padding="0"
+                               Padding="6"
                                HasShadow="True"
+                               Margin="4"
                                BackgroundColor="#1F1F1F"
                                BorderColor="#333333">
                             <Grid>

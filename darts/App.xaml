@@ -15,6 +15,8 @@
             <valueConverters:IsSelectedItemConverter x:Key="IsSelectedItemConverter"/>
             <valueConverters:EqualConverter x:Key="EqualConverter"/>
             <valueConverters:NullToZeroConverter x:Key="NullToZeroConverter"/>
+            <valueConverters:InitialsConverter x:Key="InitialsConverter"/>
+            <valueConverters:BoolToStringConverter x:Key="BoolToStringConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

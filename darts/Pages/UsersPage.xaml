@@ -3,73 +3,164 @@
              xmlns:viewModel="clr-namespace:darts.ViewModel"
              xmlns:model1="clr-namespace:darts.Core.Model;assembly=darts.Core"
              x:DataType="viewModel:UsersPageViewModel"
-             x:Class="darts.UsersPage">
+             x:Class="darts.UsersPage"
+             BackgroundColor="{AppThemeBinding Light=#F5F5F7, Dark=#1C1C1E}">
     
-    <Grid VerticalOptions="FillAndExpand" Padding="8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Grid RowDefinitions="Auto,*,Auto" Padding="4" RowSpacing="20">
+
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" RowSpacing="8">
+            <Label Text=" Gracze"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Start"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            <Label Grid.Row="1"
+                   Text="Zarządzaj listą graczy"
+                   FontSize="16"
+                   HorizontalOptions="Start"
+                   TextColor="{AppThemeBinding Light=#6E6E6E, Dark=#BEBEBE}" />
+        </Grid>
         
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Placeholder="Nazwa gracza"
-               Text="{Binding NewUserName}" />
-        
-        <Button Grid.Row="1" Grid.Column="0" Text="Dodaj" Command="{Binding AddUserCommand}" Margin="4"/>
-        <Button Grid.Row="1" Grid.Column="1" Text="Aktualizuj" Command="{Binding UpdateUserCommand}" Margin="4"/>
-        <Button Grid.Row="1" Grid.Column="2" Text="Usuń" Command="{Binding DeleteUserCommand}" Margin="4"/>
-        
-        <CollectionView Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                ItemsSource="{Binding Users}"
-                SelectionMode="Single"
-                SelectedItem="{Binding SelectedUser}"
-                BackgroundColor="Transparent">
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Users}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedUser}"
+                        BackgroundColor="Transparent">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="1" />
+            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model1:User">
-                    <Border x:Name="ItemBorder"
-                            Margin="6"
-                            StrokeShape="RoundRectangle 8"
-                            Padding="12"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}">
-        
+                    <Border Margin="0,6"
+                            Padding="16"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E5E7, Dark=#3A3A3C}"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#2C2C2E}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal">
                                     <VisualState.Setters>
-                                        <Setter TargetName="ItemBorder" Property="BackgroundColor" 
-                                                Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-                                        <Setter TargetName="ItemBorder" Property="Scale" Value="1.0" />
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFFFFF, Dark=#2C2C2E}" />
+                                        <Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E5E7, Dark=#3A3A3C}" />
+                                        <Setter Property="Scale" Value="0.97" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter TargetName="ItemBorder" Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                        <Setter TargetName="ItemBorder" Property="Scale" Value="1.03" />
+                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                        <Setter Property="Scale" Value="1.0" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <HorizontalStackLayout>
-                            <Label Text="{Binding Name}"
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Start" />
-                        </HorizontalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                            <Border HeightRequest="50" WidthRequest="50"
+                                    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
+                                    HorizontalOptions="Center" VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25" />
+                                </Border.StrokeShape>
+                                <Label Text="{Binding Name, Converter={StaticResource InitialsConverter}}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center" />
+                            </Border>
+                            
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                                <Label Text="{Binding Id, StringFormat='ID: {0:N}'}"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#6E6E6E, Dark=#BEBEBE}" />
+                            </VerticalStackLayout>
+                            
+                            <Border Grid.Column="2"
+                                    HeightRequest="32" WidthRequest="32"
+                                    BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
+                                    HorizontalOptions="Center" VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6" />
+                                </Border.StrokeShape>
+                                <Label Text="›"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6E6E6E, Dark=#BEBEBE}"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center" />
+                            </Border>
+                        </Grid>
                     </Border>
                 </DataTemplate>
-
             </CollectionView.ItemTemplate>
         </CollectionView>
+        
+        <Border Grid.Row="2"
+                StrokeThickness="1"
+                Stroke="{AppThemeBinding Light=#E5E5E7, Dark=#3A3A3C}"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#2C2C2E}"
+                Padding="16"
+                HeightRequest="140">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
+                <Border Grid.Row="0"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E5E5E7, Dark=#3A3A3C}"
+                        BackgroundColor="{AppThemeBinding Light=#F9FAFB, Dark=#1F2937}"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Entry Placeholder="Nazwa gracza"
+                           Text="{Binding NewUserName}"
+                           BackgroundColor="Transparent"
+                           FontSize="16"
+                           Margin="12,0"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                </Border>
+                
+                <StackLayout Grid.Row="1" 
+                            Orientation="Horizontal" 
+                            Spacing="8" 
+                            HeightRequest="40">
+                    
+                    <Button Text="➕ Dodaj"
+                            Command="{Binding AddUserCommand}"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            CornerRadius="8"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand" />
+
+                    <Button Text="✏️ Aktualizuj"
+                            Command="{Binding UpdateUserCommand}"
+                            BackgroundColor="#3B82F6"
+                            TextColor="White"
+                            CornerRadius="8"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand" />
+
+                    <Button Text="🗑️ Usuń"
+                            Command="{Binding DeleteUserCommand}"
+                            BackgroundColor="#DC2626"
+                            TextColor="White"
+                            CornerRadius="8"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand" />
+                </StackLayout>
+            </Grid>
+        </Border>
     </Grid>
 </ContentPage>
