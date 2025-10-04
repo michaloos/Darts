@@ -1,4 +1,3 @@
-using System;
 using CommunityToolkit.Maui.Views;
 using darts.Core.Model;
 using darts.ViewModel;
@@ -7,33 +6,28 @@ namespace darts;
 
 public partial class NewGamePropsPopup : Popup
 {
-    private readonly NewGamePropsPopupViewModel _viewModel;
+    private readonly TaskCompletionSource<object?> _tcs = new();
+    public Task<object?> Result => _tcs.Task;
 
     public NewGamePropsPopup(NewGamePropsPopupViewModel viewModel, GameMode gameMode)
     {
         InitializeComponent();
-        _viewModel = viewModel;
-        BindingContext = _viewModel;
-        
-        _viewModel.Initialize(gameMode);
-        
-        _viewModel.CloseRequested += OnCloseRequested;
-    }
+        BindingContext = viewModel;
 
-    private void OnCloseRequested(object? sender, object result)
-    {
-        // Zamknij popup i zwróć wynik (konfigurację lub null)
-        Close(result);
-    }
+        viewModel.Initialize(gameMode);
 
-    protected override void OnHandlerChanged()
-    {
-        base.OnHandlerChanged();
-
-        if (Handler == null && _viewModel != null)
+        // subskrypcja zdarzenia CloseRequested
+        viewModel.CloseRequested += (s, result) =>
         {
-            // Odpięcie zdarzenia przy zamknięciu popupu
-            _viewModel.CloseRequested -= OnCloseRequested;
-        }
+            _tcs.SetResult(result); // ustaw wynik
+            ClosePopup();           // zamknij popup
+        };
+    }
+
+    private void ClosePopup()
+    {
+        // metoda w ContentView, zamyka popup
+        // w MAUI 12 nie ma Dismiss, więc popup kończy się po zakończeniu ShowPopupAsync
+        // wystarczy zakończyć task i popup zniknie
     }
 }

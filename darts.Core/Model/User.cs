@@ -1,4 +1,4 @@
-using darts.Data.Interfaces;
+using darts.Core.Interface;
 
 namespace darts.Core.Model;
 

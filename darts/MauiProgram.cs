@@ -6,7 +6,7 @@ using darts.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
-using PopupService = CommunityToolkit.Maui.PopupService;
+using IPopupService = darts.Core.Interface.IPopupService;
 
 namespace darts;
 
@@ -69,7 +69,7 @@ public static class MauiProgram
 		builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 		builder.Services.AddScoped<IUserService, UserService>();
-		builder.Services.AddScoped<IPopupService, darts.Services.PopupService>();
+		builder.Services.AddScoped<IPopupService, PopupService>();
 		builder.ConfigureMopups();
 
 #if DEBUG

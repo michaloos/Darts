@@ -1,5 +1,3 @@
-using darts.Data.Interfaces;
-
 namespace darts.Core.Interface;
 
 public interface IRepository<T> where T : IEntity

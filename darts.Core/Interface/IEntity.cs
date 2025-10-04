@@ -1,4 +1,4 @@
-namespace darts.Data.Interfaces;
+namespace darts.Core.Interface;
 
 public interface IEntity
 {
